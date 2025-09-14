@@ -217,10 +217,23 @@ const deleteProduct = async (req, res) => {
   }
 }
 
+// categoryController.js
+
+const getCategories = async (req, res) => {
+  try {
+    const categories = await Category.find({ isActive: true });
+    res.json(categories);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch categories" });
+  }
+};
+
+
 module.exports = {
   getProducts,
   getProduct,
   createProduct,
   updateProduct,
   deleteProduct,
+  getCategories,
 }
