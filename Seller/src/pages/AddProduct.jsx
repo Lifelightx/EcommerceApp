@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Upload, X, Plus, AlertCircle, Package, DollarSign, FileText, Tag, Hash } from 'lucide-react';
 import axios from "axios";
 import { StoreContext } from '../ContextApi';
@@ -18,13 +18,15 @@ function AddProduct() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const {url, sellerToken} = useContext(StoreContext)
   // Sample categories - replace with actual data from your backend
-  const categories = [
-    { id: '1', name: 'Electronics' },
-    { id: '2', name: 'Clothing' },
-    { id: '3', name: 'Books' },
-    { id: '4', name: 'Home & Garden' },
-    { id: '5', name: 'Sports' },
-  ];
+  const [categories, setCategories] = useState([])
+   useEffect(() => {
+    axios
+      .get(`${url}/api/products/categories`, {
+        headers: { Authorization: `Bearer ${sellerToken}` },
+      })
+      .then((res) => setCategories(res.data))
+      .catch((err) => console.error("Failed to load categories:", err));
+  }, [url, sellerToken]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -240,8 +242,9 @@ const handleSubmit = async (e) => {
                 >
                   <option value="">Select a category</option>
                   {categories.map(category => (
-                    <option key={category.id} value={category.id}>
+                    <option key={category._id} value={category._id}>
                       {category.name}
+                      
                     </option>
                   ))}
                 </select>

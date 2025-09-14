@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react'
 import { BrowserRouter, Routes,Route } from 'react-router-dom'
 import './App.css'
-import Auth from './Hooks/Auth'
+
 import Home from './pages/Home';
 import { Navigate, Outlet } from "react-router-dom";
 import Navbar from './components/Navbar';

@@ -2,7 +2,7 @@ const Product = require("../models/Product")
 const Category = require("../models/Category")
 
 // Get all products with filtering and pagination
-const getProducts = async (req, res) => {
+const getallProducts = async (req, res) => {
   try {
     const {
       page = 1,
@@ -65,6 +65,74 @@ const getProducts = async (req, res) => {
     res.status(500).json({ error: "Internal server error" })
   }
 }
+const getProducts = async (req, res) => {
+  try {
+    const {
+      page = 1,
+      limit = 10,
+      category,
+      minPrice,
+      maxPrice,
+      search,
+      sortBy = "createdAt",
+      sortOrder = "desc",
+    } = req.query;
+
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    // Build filter object
+    const filter = {
+      seller: req.user.id, // only this seller's products
+    };
+
+    if (category) {
+      filter.category = category;
+    }
+
+    if (minPrice || maxPrice) {
+      filter.price = {};
+      if (minPrice) filter.price.$gte = Number.parseFloat(minPrice);
+      if (maxPrice) filter.price.$lte = Number.parseFloat(maxPrice);
+    }
+
+    if (search) {
+      filter.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    const skip = (Number.parseInt(page) - 1) * Number.parseInt(limit);
+
+    const sort = {};
+    sort[sortBy] = sortOrder === "desc" ? -1 : 1;
+
+    const products = await Product.find(filter)
+      .populate("category", "name")
+      .populate("seller", "name email")
+      .sort(sort)
+      .skip(skip)
+      .limit(Number.parseInt(limit));
+
+    const total = await Product.countDocuments(filter);
+
+    res.json({
+      products,
+      pagination: {
+        currentPage: Number.parseInt(page),
+        totalPages: Math.ceil(total / Number.parseInt(limit)),
+        totalProducts: total,
+        hasNext: skip + products.length < total,
+        hasPrev: Number.parseInt(page) > 1,
+      },
+    });
+  } catch (error) {
+    console.error("Get products error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
 
 // Get single product
 const getProduct = async (req, res) => {
@@ -110,7 +178,7 @@ const createProduct = async (req, res) => {
     // Handle image upload
     let images = []
     if (req.files && req.files.length > 0) {
-      images = req.files.map((file) => `/uploads/${file.filename}`)
+      images = req.files.map((file) => `/uploads/products/${file.filename}`)
     }
 
     const product = new Product({

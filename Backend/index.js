@@ -20,27 +20,26 @@ const PORT = process.env.PORT || 3000
 
 connectDB()
 
-// Security middleware
-app.use(helmet())
-const allowedOrigins = [
-  "http://localhost:3000",
-  "http://localhost:5173",
-  "http://localhost:5174",
-  "https://yourfrontend.com",
-  `${process.env.FRONTEND_URL}`
-];
+// CORS configuration
+const corsOptions = {
+  origin: ["http://localhost:5173", "http://localhost:5174"], // React dev server
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
 
-app.use(
-  cors({
-    origin: allowedOrigins,
-    credentials: true, // if you need cookies/auth headers
-  })
-);
+// Apply CORS globally first
+app.use(cors(corsOptions));
+
+// Security middleware (configure helmet to allow images)
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" }
+}))
 
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 1000, // limit each IP to 100 requests per windowMs
+  max: 1000, // limit each IP to 1000 requests per windowMs
 })
 app.use(limiter)
 
@@ -49,7 +48,7 @@ app.use(express.json({ limit: "10mb" }))
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 
-// Static file serving for uploads
+// Static file serving for uploads - simplified without redundant CORS
 app.use("/uploads", express.static(path.join(__dirname, "uploads")))
 
 // API routes

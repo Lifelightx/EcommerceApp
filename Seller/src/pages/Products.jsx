@@ -42,6 +42,12 @@ function Products() {
     }
   }, [sellerToken]);
 
+  // Handle image loading errors
+  const handleImageError = (e) => {
+    console.error("Image failed to load:", e.target.src);
+    e.target.style.display = 'none';
+  };
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-12">
       <h1 className="text-2xl font-bold mb-6">Products</h1>
@@ -56,12 +62,34 @@ function Products() {
               <div
                 key={product._id}
                 className="border p-4 rounded-lg shadow hover:shadow-lg transition"
-              >
+              > 
+                {/* Product Image */}
+                {console.log('Product images:', product.images)}
+
+                {product.images && product.images.length > 0 ? (
+                  <div className="w-full h-48 mb-4 rounded overflow-hidden bg-gray-100">
+                    <img
+                      src={`${url}${product.images[0]}`} // use first image
+                      alt={product.name}
+                      className="w-full h-full object-cover"
+                      onError={handleImageError}
+                      onLoad={() => console.log('Image loaded successfully:', `${url}${product.images[0]}`)}
+                    />
+                  </div>
+                ) : (
+                  <div className="w-full h-48 bg-gray-200 flex items-center justify-center mb-4 rounded">
+                    <span className="text-gray-500">No Image</span>
+                  </div>
+                )}
+
                 <h2 className="text-lg font-semibold">{product.name}</h2>
                 <p className="text-gray-600">{product.category?.name}</p>
                 <p className="text-sm text-gray-500">
                   Seller: {product.seller?.name} ({product.seller?.email})
                 </p>
+                
+                {/* Debug info - remove in production */}
+                
               </div>
             ))}
           </div>
@@ -71,11 +99,10 @@ function Products() {
             <button
               disabled={!pagination.hasPrev}
               onClick={() => fetchProducts(pagination.currentPage - 1)}
-              className={`px-4 py-2 rounded ${
-                pagination.hasPrev
+              className={`px-4 py-2 rounded ${pagination.hasPrev
                   ? "bg-blue-500 text-white hover:bg-blue-600"
                   : "bg-gray-300 cursor-not-allowed"
-              }`}
+                }`}
             >
               Prev
             </button>
@@ -87,11 +114,10 @@ function Products() {
             <button
               disabled={!pagination.hasNext}
               onClick={() => fetchProducts(pagination.currentPage + 1)}
-              className={`px-4 py-2 rounded ${
-                pagination.hasNext
+              className={`px-4 py-2 rounded ${pagination.hasNext
                   ? "bg-blue-500 text-white hover:bg-blue-600"
                   : "bg-gray-300 cursor-not-allowed"
-              }`}
+                }`}
             >
               Next
             </button>

@@ -17,7 +17,7 @@ const sendEmail = async (to, otp) => {
           <p style="color: #555; font-size: 16px;">
             Thank you for signing up! Please use the following OTP to verify your email:
           </p>
-          <h1 style="color: #ff6600; letter-spacing: 3px;">${otp}</h1>
+          <h1 style="color: #00ffa2; letter-spacing: 3px;">${otp}</h1>
           <p style="color: #777; font-size: 14px; margin-top: 20px;">
             This code will expire in <b>10 minutes</b>. If you didn’t request this, please ignore this email.
           </p>
