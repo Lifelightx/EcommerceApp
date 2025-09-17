@@ -4,6 +4,7 @@ const upload = require("../middleware/uplaod")
 const {
   getProducts,
   getProduct,
+  getallProducts,
   createProduct,
   updateProduct,
   deleteProduct,
@@ -13,6 +14,7 @@ const {
 const router = express.Router()
 
 router.get("/",authenticateToken, getProducts)
+router.get("/all",getallProducts)
 router.get("/categories", getCategories);
 router.get("/:id", getProduct)
 router.post("/", authenticateToken, authorize(["seller"]), upload.array("images", 5), createProduct)

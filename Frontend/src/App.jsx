@@ -11,6 +11,9 @@ import Cart from './pages/Cart'
 import Order from './pages/Order'
 import Payment from './pages/Payment'
 import Product from './pages/Product'
+import ProductListing from './pages/Product';
+import CategoryShowcase from './pages/Category';
+import ProductDetails from './pages/Details';
 function App() {
   const ProtectedRoute = () => {
       const { user } = useContext(StoreContext); // check user from context
@@ -24,7 +27,9 @@ function App() {
       <Routes>
         {/* Public */}
         <Route path="/" element={<Home />} />
-
+        <Route path='/shop' element={<ProductListing/>}/>
+        <Route path='/categories' element={<CategoryShowcase/>}/>
+        <Route path='/details/:id' element={<ProductDetails/>}/>
         {/* All Protected */}
         <Route element={<ProtectedRoute />}>
              <Route path="/cart" element={<Cart />} />

@@ -82,7 +82,7 @@ const ProfessionalNavbar = () => {
             setToken(res.data.token)
             localStorage.setItem("token",res.data.token)
             localStorage.setItem("user", JSON.stringify(res.data.user))
-            
+            navigate("/shop")
           setShowAuthModal(false)
           setAuthMode('login')
           }
@@ -136,16 +136,17 @@ const ProfessionalNavbar = () => {
       // optional, backend defaults to "customer"
     };
 
-    console.log("Sending signup payload:", payload);
+    // console.log("Sending signup payload:", payload);
 
     axios.post(`${url}/api/auth/register`, payload)
       .then(res => {
         if (res.status === 201) {
-          console.log("User registered:", res.data);
+          // console.log("User registered:", res.data);
           // setIsLoggedIn(true);
           setShowAuthModal(false);
           setUser(res.data.user)
           setToken(res.data.token)
+          navigate("/shop")
           // Reset form
           setSignupStep(1);
           setSignupEmail("");
@@ -172,6 +173,7 @@ const ProfessionalNavbar = () => {
   const handleLogout = () => {
     // setIsLoggedIn(false)
      setToken("");
+     navigate("/")
     setUser(null);
 
   // Clear localStorage

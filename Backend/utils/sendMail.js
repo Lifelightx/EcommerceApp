@@ -26,7 +26,7 @@ const sendEmail = async (to, otp) => {
     `;
 
     const mailOptions = {
-      from: `"My App" <jeebanjyoti.mallik@ap2l.ai>`,
+      from: `"ApStore" <jeebanjyoti.mallik@ap2l.ai>`,
       to,
       subject: "Your Verification Code",
       text: `Your OTP is: ${otp}`, // fallback plain text

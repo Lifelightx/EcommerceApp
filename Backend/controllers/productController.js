@@ -1,5 +1,6 @@
 const Product = require("../models/Product")
 const Category = require("../models/Category")
+const Review = require("../models/Review");
 
 // Get all products with filtering and pagination
 const getallProducts = async (req, res) => {
@@ -42,7 +43,7 @@ const getallProducts = async (req, res) => {
     // Get products with pagination
     const products = await Product.find(filter)
       .populate("category", "name")
-      .populate("seller", "name email")
+      .populate("seller", "firstName lastName email")
       .sort(sort)
       .skip(skip)
       .limit(Number.parseInt(limit))
@@ -137,6 +138,7 @@ const getProducts = async (req, res) => {
 // Get single product
 const getProduct = async (req, res) => {
   try {
+    // console.log(req.params.id)
     const product = await Product.findById(req.params.id)
       .populate("category", "name")
       .populate("seller", "name email")
@@ -299,6 +301,7 @@ const getCategories = async (req, res) => {
 
 module.exports = {
   getProducts,
+  getallProducts,
   getProduct,
   createProduct,
   updateProduct,

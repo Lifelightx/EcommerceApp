@@ -16,7 +16,7 @@ const ProductCard = memo(({ product, index }) => {
       {/* Badge */}
       <div className="absolute top-4 left-4 z-10">
         <span
-          className={`px-3 py-1 rounded-full text-xs font-semibold text-white ${
+          className={`px-3 py-1 rounded-full text-xs font-semibold text-white ₹{
             product.badge === "Bestseller"
               ? "bg-amber-500"
               : product.badge === "New"
@@ -60,7 +60,7 @@ const ProductCard = memo(({ product, index }) => {
             {[...Array(5)].map((_, i) => (
               <Star
                 key={i}
-                className={`w-4 h-4 ${
+                className={`w-4 h-4 ₹{
                   i < Math.floor(product.rating) ? "text-yellow-400 fill-current" : "text-gray-300"
                 }`}
               />
@@ -149,8 +149,8 @@ const EcommerceHomepage = () => {
     {
       id: 1,
       name: "Premium Wireless Headphones",
-      price: "$299",
-      originalPrice: "$399",
+      price: "₹299",
+      originalPrice: "₹399",
       rating: 4.8,
       reviews: 324,
       image: "🎧",
@@ -159,8 +159,8 @@ const EcommerceHomepage = () => {
     {
       id: 2,
       name: "Smart Fitness Watch",
-      price: "$199",
-      originalPrice: "$249",
+      price: "₹199",
+      originalPrice: "₹249",
       rating: 4.6,
       reviews: 189,
       image: "⌚",
@@ -169,8 +169,8 @@ const EcommerceHomepage = () => {
     {
       id: 3,
       name: "Designer Backpack",
-      price: "$89",
-      originalPrice: "$129",
+      price: "₹89",
+      originalPrice: "₹129",
       rating: 4.9,
       reviews: 567,
       image: "🎒",
@@ -179,8 +179,8 @@ const EcommerceHomepage = () => {
     {
       id: 4,
       name: "orangetooth Speaker",
-      price: "$79",
-      originalPrice: "$99",
+      price: "₹79",
+      originalPrice: "₹99",
       rating: 4.7,
       reviews: 234,
       image: "🔊",
@@ -264,7 +264,7 @@ const EcommerceHomepage = () => {
             exit="exit"
             className="absolute inset-0 bg-gradient-to-br opacity-90"
             style={{
-              background: `linear-gradient(to bottom right, ${heroSlides[currentSlide].bg.split(" ").join(", ")})`,
+              background: `linear-gradient(to bottom right, ₹{heroSlides[currentSlide].bg.split(" ").join(", ")})`,
             }}
           />
         </AnimatePresence>
@@ -298,7 +298,7 @@ const EcommerceHomepage = () => {
 
             <AnimatePresence mode="wait">
               <motion.p
-                key={`subtitle-${currentSlide}`}
+                key={`subtitle-₹{currentSlide}`}
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 50 }}
@@ -340,7 +340,7 @@ const EcommerceHomepage = () => {
               onClick={() => handleSlideChange(index)}
               whileHover={{ scale: 1.2 }}
               whileTap={{ scale: 0.8 }}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+              className={`w-3 h-3 rounded-full transition-all duration-300 ₹{
                 currentSlide === index ? "bg-white scale-125" : "bg-white bg-opacity-50"
               }`}
             />
@@ -434,7 +434,7 @@ const EcommerceHomepage = () => {
                   whileInView={{ scale: 1 }}
                   transition={{ delay: index * 0.1, type: "spring", damping: 15 }}
                   viewport={{ once: true }}
-                  className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}
+                  className={`absolute inset-0 bg-gradient-to-br ₹{category.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}
                 />
 
                 <div className="relative">
@@ -498,18 +498,18 @@ const EcommerceHomepage = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-gradient-to-br from-gray-900 via-orange-900 to-orange-900 text-white relative overflow-hidden">
+      <section className="py-20 bg-gradient-to-br from-orange-200 via-orange-100 to-orange-300 text-white relative overflow-hidden">
         <div className="absolute inset-0 opacity-40">
           <div
             className="absolute inset-0"
             style={{
-              backgroundImage: `url("data:image/svg+xml,${encodeURIComponent('<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fillRule="evenodd"><g fill="#9C92AC" fillOpacity="0.05"><circle cx="30" cy="30" r="1"/></g></g></svg>')}")`,
+              backgroundImage: `url("data:image/svg+xml,₹{encodeURIComponent('<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fillRule="evenodd"><g fill="#9C92AC" fillOpacity="0.05"><circle cx="30" cy="30" r="1"/></g></g></svg>')}")`,
               backgroundRepeat: "repeat",
             }}
           />
         </div>
 
-        <div className="container mx-auto px-4 relative">
+        <div className="container mx-auto px-4 text-black relative">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -534,7 +534,7 @@ const EcommerceHomepage = () => {
               {
                 icon: Truck,
                 title: "Free Shipping",
-                description: "Enjoy free shipping on all orders over $50. Fast, reliable delivery to your doorstep.",
+                description: "Enjoy free shipping on all orders over ₹50. Fast, reliable delivery to your doorstep.",
               },
               {
                 icon: Shield,
@@ -560,7 +560,7 @@ const EcommerceHomepage = () => {
                   viewport={{ once: true }}
                   className={`inline-flex items-center justify-center w-20 h-20 rounded-full mb-6 ${
                     index === 0
-                      ? "bg-gradient-to-r from-orange-500 to-cyan-500"
+                      ? "bg-gradient-to-r from-orange-500 to-orange-600"
                       : index === 1
                         ? "bg-gradient-to-r from-orange-500 to-pink-500"
                         : "bg-gradient-to-r from-orange-500 to-red-500"
@@ -569,7 +569,7 @@ const EcommerceHomepage = () => {
                   <feature.icon className="w-10 h-10" />
                 </motion.div>
                 <h3 className="text-2xl font-bold mb-4">{feature.title}</h3>
-                <p className="text-gray-300 leading-relaxed">{feature.description}</p>
+                <p className="text-gray-800 leading-relaxed">{feature.description}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -577,9 +577,9 @@ const EcommerceHomepage = () => {
       </section>
 
       {/* Newsletter Section */}
-      <section className="py-20 bg-gradient-to-r from-orange-600 via-orange-600 to-pink-600 relative overflow-hidden">
-        <div className="absolute inset-0 bg-black opacity-20" />
-        <div className="container mx-auto px-4 text-center relative">
+      <section className="py-20  relative overflow-hidden">
+        <div />
+        <div className="container  mx-auto px-4 text-center relative">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -591,11 +591,11 @@ const EcommerceHomepage = () => {
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
-              className="text-5xl font-black text-white mb-6"
+              className="text-5xl font-black  text-gray-800 mb-6"
             >
               Stay Updated
             </motion.h2>
-            <p className="text-xl text-gray-200 mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-gray-500 mb-8 max-w-2xl mx-auto">
               Subscribe to our newsletter and be the first to know about new products, exclusive deals, and special
               offers.
             </p>
