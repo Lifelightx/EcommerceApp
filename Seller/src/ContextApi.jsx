@@ -3,7 +3,7 @@ import { useEffect, useState, createContext } from "react";
 export const StoreContext = createContext();
 
 export const StoreContextProvider = ({ children }) => {
-  const url = "http://localhost:7500";
+  const url = "http://localhost:4500";
 
   // initialize from localStorage
   const [sellerToken, setsellerToken] = useState(() => localStorage.getItem("sellerToken") || "");
