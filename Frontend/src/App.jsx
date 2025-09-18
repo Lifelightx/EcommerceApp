@@ -7,13 +7,13 @@ import { Navigate, Outlet } from "react-router-dom";
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import { StoreContext } from './ContextApi';
-import Cart from './pages/Cart'
 import Order from './pages/Order'
 import Payment from './pages/Payment'
 import Product from './pages/Product'
 import ProductListing from './pages/Product';
 import CategoryShowcase from './pages/Category';
 import ProductDetails from './pages/Details';
+import CartPage from './pages/CartPage';
 function App() {
   const ProtectedRoute = () => {
       const { user } = useContext(StoreContext); // check user from context
@@ -32,7 +32,7 @@ function App() {
         <Route path='/details/:id' element={<ProductDetails/>}/>
         {/* All Protected */}
         <Route element={<ProtectedRoute />}>
-             <Route path="/cart" element={<Cart />} />
+             <Route path="/cart" element={<CartPage />} />
              <Route path='/order' element={<Order />} />
              <Route path='/Payment' element={<Payment/>}/>
              <Route path='/Product' element={<Product/>}/>

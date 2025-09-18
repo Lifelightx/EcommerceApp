@@ -2,30 +2,34 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Star, ShoppingCart, Heart, Share2, Truck, Shield, RefreshCw } from 'lucide-react';
 import { StoreContext } from '../ContextApi';
+import { useNotification } from '../NotificationContext';
+import axios from 'axios';
 
 const ProductDetails = () => {
-  const { id } = useParams(); // Get the product ID from the URL
+  const { id } = useParams();
   const navigate = useNavigate();
-  const { url } = useContext(StoreContext);
+  const { url, token } = useContext(StoreContext);
+  const { showSuccess, showError, showWarning } = useNotification();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [addingToCart, setAddingToCart] = useState(false);
 
   // Fetch product details
   useEffect(() => {
     const fetchProduct = async () => {
       setLoading(true);
       setError(null);
-      
+
       try {
         const response = await fetch(`${url}/api/products/${id}`);
-        
+
         if (!response.ok) {
           throw new Error('Product not found');
         }
-        
+
         const data = await response.json();
         setProduct(data.product);
       } catch (err) {
@@ -42,23 +46,83 @@ const ProductDetails = () => {
   }, [id, url]);
 
   const handleGoBack = () => {
-    navigate(-1); // Go back to previous page
+    navigate(-1);
   };
 
-  const handleAddToCart = () => {
-    // Add to cart logic here
-    console.log(`Adding ${quantity} of product ${id} to cart`);
+  const handleAddToCart = async () => {
+    // Check if user has token
+    if (!token) {
+      showWarning('Please login to add items to cart');
+      navigate('/');
+      return;
+    }
+
+    setAddingToCart(true);
+
+    try {
+      const response = await axios.post(
+        `${url}/api/cart/add`,
+        { productId: id, quantity: quantity },
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      // Show success notification
+      if(response.status===200){
+
+        showSuccess(`${product.name} added to cart successfully!`);
+      }
+      // Optionally reset quantity to 1 after adding
+      setQuantity(1);
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      
+      // Handle different error cases with appropriate notifications
+      if (error.response?.status === 401) {
+        showError('Your session has expired. Please login again.');
+        navigate('/');
+      } else if (error.response?.status === 400) {
+        showError(error.response.data?.message || 'Failed to add item to cart');
+      } else if (error.response?.status === 409) {
+        showWarning('This item is already in your cart');
+      } else {
+        showError('Failed to add item to cart. Please try again.');
+      }
+    } finally {
+      setAddingToCart(false);
+    }
+  };
+
+  const handleAddToWishlist = () => {
+    if (!token) {
+      showWarning('Please login to add items to wishlist');
+      return;
+    }
+    // Add wishlist logic here
+    showSuccess('Added to wishlist!');
+  };
+
+  const handleShare = () => {
+    // Copy product URL to clipboard
+    const productUrl = window.location.href;
+    navigator.clipboard.writeText(productUrl).then(() => {
+      showSuccess('Product link copied to clipboard!');
+    }).catch(() => {
+      showError('Failed to copy link');
+    });
   };
 
   const renderStars = (rating) => {
     return Array.from({ length: 5 }, (_, i) => (
       <Star
         key={i}
-        className={`w-5 h-5 ${
-          i < Math.floor(rating) 
-            ? 'text-yellow-400 fill-current' 
+        className={`w-5 h-5 ${i < Math.floor(rating)
+            ? 'text-yellow-400 fill-current'
             : 'text-gray-300'
-        }`}
+          }`}
       />
     ));
   };
@@ -91,10 +155,10 @@ const ProductDetails = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 py-12 mt-8">
       {/* Header with back button */}
-      <div className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div className="bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-1">
           <button
             onClick={handleGoBack}
             className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors mb-2"
@@ -102,11 +166,10 @@ const ProductDetails = () => {
             <ArrowLeft className="w-5 h-5" />
             Back to Products
           </button>
-          <h1 className="text-2xl font-bold text-gray-900">{product.name}</h1>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Product Images */}
           <div>
@@ -117,7 +180,7 @@ const ProductDetails = () => {
                 className="w-full h-full object-cover"
               />
             </div>
-            
+
             {/* Image thumbnails */}
             {product.images.length > 1 && (
               <div className="flex gap-2 overflow-x-auto">
@@ -125,11 +188,10 @@ const ProductDetails = () => {
                   <button
                     key={index}
                     onClick={() => setSelectedImage(index)}
-                    className={`flex-shrink-0 w-16 h-16 rounded-md overflow-hidden border-2 ${
-                      selectedImage === index 
-                        ? 'border-orange-400' 
+                    className={`flex-shrink-0 w-16 h-16 rounded-md overflow-hidden border-2 ${selectedImage === index
+                        ? 'border-orange-400'
                         : 'border-gray-200'
-                    }`}
+                      }`}
                   >
                     <img
                       src={`${url}${image}`}
@@ -146,7 +208,7 @@ const ProductDetails = () => {
           <div>
             <div className="mb-6">
               <h1 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
-              
+
               {/* Rating */}
               <div className="flex items-center gap-2 mb-4">
                 <div className="flex">
@@ -201,14 +263,15 @@ const ProductDetails = () => {
                 <div className="flex items-center border border-gray-300 rounded-md">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="px-3 py-2 text-gray-600 hover:bg-gray-100"
+                    disabled={addingToCart}
+                    className="px-3 py-2 text-gray-600 hover:bg-gray-100 disabled:opacity-50"
                   >
                     −
                   </button>
                   <span className="px-4 py-2 border-x border-gray-300">{quantity}</span>
                   <button
                     onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
-                    disabled={quantity >= product.stock}
+                    disabled={quantity >= product.stock || addingToCart}
                     className="px-3 py-2 text-gray-600 hover:bg-gray-100 disabled:opacity-50"
                   >
                     +
@@ -219,25 +282,39 @@ const ProductDetails = () => {
               <div className="flex gap-3">
                 <button
                   onClick={handleAddToCart}
-                  disabled={product.stock === 0}
+                  disabled={product.stock === 0 || addingToCart}
                   className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-orange-400 text-white font-medium rounded-md hover:bg-orange-500 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
                 >
-                  <ShoppingCart className="w-5 h-5" />
-                  Add to Cart
+                  {addingToCart ? (
+                    <>
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                      Adding...
+                    </>
+                  ) : (
+                    <>
+                      <ShoppingCart className="w-5 h-5" />
+                      Add to Cart
+                    </>
+                  )}
                 </button>
-                
-                <button className="p-3 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors">
+
+                <button 
+                  onClick={handleAddToWishlist}
+                  className="p-3 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                >
                   <Heart className="w-5 h-5 text-gray-600" />
                 </button>
-                
-                <button className="p-3 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors">
+
+                <button 
+                  onClick={handleShare}
+                  className="p-3 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                >
                   <Share2 className="w-5 h-5 text-gray-600" />
                 </button>
               </div>
             </div>
 
             {/* Features */}
-                        {/* Features */}
             <div className="border-t pt-6 space-y-4">
               <div className="flex items-center gap-3">
                 <Truck className="w-6 h-6 text-orange-400" />
@@ -256,7 +333,7 @@ const ProductDetails = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ProductDetails
+export default ProductDetails;

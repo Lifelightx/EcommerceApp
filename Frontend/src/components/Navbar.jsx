@@ -343,6 +343,7 @@ const ProfessionalNavbar = () => {
                   <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
+                    onClick={()=>navigate('/cart')}
                     className="relative p-2 text-gray-600 hover:text-orange-600 transition-colors duration-200"
                   >
                     <ShoppingCart className="w-5 h-5" />
