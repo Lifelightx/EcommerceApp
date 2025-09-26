@@ -1,12 +1,35 @@
-const express = require("express")
-const { authenticateToken, authorize } = require("../middleware/auth")
-const { createOrder, getOrders, getOrder, updateOrderStatus } = require("../controllers/orderController")
+const express = require('express')
+const { 
+    placeOrder, 
+    verifyOrder, 
+    userOrders, 
+    listOrders, 
+    updateOrderStatus, 
+    cancelOrder,
+    getOrderById 
+} = require('../controllers/orderController')
+const { authenticateToken } = require('../middleware/auth')
+const orderRouter = express.Router()
 
-const router = express.Router()
+// Place order (both online and COD)
+orderRouter.post('/place', authenticateToken, placeOrder)
 
-router.post("/", authenticateToken, createOrder)
-router.get("/", authenticateToken, getOrders)
-router.get("/:id", authenticateToken, getOrder)
-router.put("/:id/status", authenticateToken, authorize(["seller"]), updateOrderStatus)
+// Verify online payment
+orderRouter.post('/verify', verifyOrder)
 
-module.exports = router
+// Get user orders
+orderRouter.get('/userorders', authenticateToken, userOrders)
+
+// Get all orders (admin)
+orderRouter.get('/list', listOrders)
+
+// Get single order by ID
+orderRouter.get('/:orderId', authenticateToken, getOrderById)
+
+// Update order status (admin)
+orderRouter.post('/status', updateOrderStatus)
+
+// Cancel order (user)
+orderRouter.post('/cancel', authenticateToken, cancelOrder)
+
+module.exports = orderRouter    

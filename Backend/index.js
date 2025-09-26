@@ -14,7 +14,7 @@ const sellerRoutes = require("./routes/sellers")
 const productRoutes = require("./routes/products")
 const orderRoutes = require("./routes/orders")
 const cartRoutes = require("./routes/cart")
-
+const reviewRoutes = require("./routes/review")
 const app = express()
 const PORT = process.env.PORT || 3000
 
@@ -38,8 +38,8 @@ app.use(helmet({
 
 // Rate limiting
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 1000, // limit each IP to 1000 requests per windowMs
+  windowMs: 30 * 60 * 1000, // 15 minutes
+  max: 10000, // limit each IP to 1000 requests per windowMs
 })
 app.use(limiter)
 
@@ -58,7 +58,7 @@ app.use("/api/sellers", sellerRoutes)
 app.use("/api/products", productRoutes)
 app.use("/api/orders", orderRoutes)
 app.use("/api/cart", cartRoutes)
-
+app.use("api/review", reviewRoutes)
 // Health check endpoint
 app.get("/health", (req, res) => {
   res.json({ status: "OK", timestamp: new Date().toISOString() })

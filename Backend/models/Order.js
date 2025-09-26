@@ -1,57 +1,63 @@
 const mongoose = require("mongoose")
 
-const orderItemSchema = new mongoose.Schema({
-  product: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Product",
-    required: true,
-  },
-  quantity: {
-    type: Number,
-    required: true,
-    min: 1,
-  },
-  price: {
-    type: Number,
-    required: true,
-    min: 0,
-  },
-})
-
-const orderSchema = new mongoose.Schema(
-  {
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
+const orderSchema = new mongoose.Schema({
+    userId: {
+        type: String,
+        required: true
     },
-    items: [orderItemSchema],
-    totalAmount: {
-      type: Number,
-      required: true,
-      min: 0,
+    items: {
+        type: Array,
+        required: true
+    },
+    amount: {
+        type: Number,
+        required: true
+    },
+    address: {
+        type: Object,
+        required: true
+    },
+    paymentMethod: {
+        type: String,
+        enum: ['online', 'cash_on_delivery'],
+        default: 'online'
+    },
+    payment: {
+        type: Boolean,
+        default: false
     },
     status: {
-      type: String,
-      enum: ["pending", "confirmed", "shipped", "delivered", "cancelled"],
-      default: "pending",
+        type: String,
+        default: "Order Placed"
     },
-    shippingAddress: {
-      street: { type: String, required: true },
-      city: { type: String, required: true },
-      state: { type: String, required: true },
-      zipCode: { type: String, required: true },
-      country: { type: String, required: true },
+    date: {
+        type: Date,
+        default: Date.now
     },
-    paymentStatus: {
-      type: String,
-      enum: ["pending", "paid", "failed", "refunded"],
-      default: "pending",
+    cancelledAt: {
+        type: Date
     },
-  },
-  {
-    timestamps: true,
-  },
-)
+    deliveredAt: {
+        type: Date
+    }
+})
 
-module.exports = mongoose.model("Order", orderSchema)
+// Update deliveredAt when status changes to "Delivered"
+orderSchema.pre('save', function(next) {
+    if (this.isModified('status') && this.status === 'Delivered' && !this.deliveredAt) {
+        this.deliveredAt = new Date()
+    }
+    next()
+})
+
+// Update deliveredAt when status is updated via findByIdAndUpdate
+orderSchema.pre('findOneAndUpdate', function(next) {
+    const update = this.getUpdate()
+    if (update.status === 'Delivered') {
+        update.deliveredAt = new Date()
+    }
+    next()
+})
+
+const orderModel = mongoose.models.order || mongoose.model("order", orderSchema)
+module.exports = orderModel

@@ -131,7 +131,7 @@ const ProductDetails = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-400 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-400 mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading product details...</p>
         </div>
       </div>
@@ -145,7 +145,7 @@ const ProductDetails = () => {
           <p className="text-red-600 mb-4">Error: {error || 'Product not found'}</p>
           <button
             onClick={handleGoBack}
-            className="px-4 py-2 bg-orange-400 text-white rounded-md hover:bg-orange-500"
+            className="px-4 py-2 bg-purple-400 text-white rounded-md hover:bg-purple-500"
           >
             Go Back
           </button>
@@ -189,7 +189,7 @@ const ProductDetails = () => {
                     key={index}
                     onClick={() => setSelectedImage(index)}
                     className={`flex-shrink-0 w-16 h-16 rounded-md overflow-hidden border-2 ${selectedImage === index
-                        ? 'border-orange-400'
+                        ? 'border-purple-400'
                         : 'border-gray-200'
                       }`}
                   >
@@ -207,7 +207,7 @@ const ProductDetails = () => {
           {/* Product Info */}
           <div>
             <div className="mb-6">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
+              <h1 className="text-3xl font-bold text-purple-900 mb-2">{product.name}</h1>
 
               {/* Rating */}
               <div className="flex items-center gap-2 mb-4">
@@ -231,7 +231,7 @@ const ProductDetails = () => {
                 {product.stock > 5 ? (
                   <span className="text-green-600 font-medium">In Stock ({product.stock} available)</span>
                 ) : product.stock > 0 ? (
-                  <span className="text-orange-600 font-medium">Only {product.stock} left!</span>
+                  <span className="text-purple-600 font-medium">Only {product.stock} left!</span>
                 ) : (
                   <span className="text-red-600 font-medium">Out of Stock</span>
                 )}
@@ -283,7 +283,7 @@ const ProductDetails = () => {
                 <button
                   onClick={handleAddToCart}
                   disabled={product.stock === 0 || addingToCart}
-                  className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-orange-400 text-white font-medium rounded-md hover:bg-orange-500 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+                  className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-purple-500 text-white font-medium rounded-md hover:bg-purple-500 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
                 >
                   {addingToCart ? (
                     <>
@@ -317,15 +317,15 @@ const ProductDetails = () => {
             {/* Features */}
             <div className="border-t pt-6 space-y-4">
               <div className="flex items-center gap-3">
-                <Truck className="w-6 h-6 text-orange-400" />
+                <Truck className="w-6 h-6 text-purple-400" />
                 <span className="text-gray-700">Free delivery on orders over ₹500</span>
               </div>
               <div className="flex items-center gap-3">
-                <Shield className="w-6 h-6 text-orange-400" />
+                <Shield className="w-6 h-6 text-purple-400" />
                 <span className="text-gray-700">Secure payment & buyer protection</span>
               </div>
               <div className="flex items-center gap-3">
-                <RefreshCw className="w-6 h-6 text-orange-400" />
+                <RefreshCw className="w-6 h-6 text-purple-400" />
                 <span className="text-gray-700">7-day easy return policy</span>
               </div>
             </div>

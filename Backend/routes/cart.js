@@ -11,3 +11,4 @@ router.delete("/remove/:productId", authenticateToken, removeFromCart)
 router.delete("/clear", authenticateToken, clearCart)
 
 module.exports = router
+

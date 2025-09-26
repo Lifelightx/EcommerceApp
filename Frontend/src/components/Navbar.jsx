@@ -17,6 +17,7 @@ import {
 } from "lucide-react"
 import axios from "axios";
 import { StoreContext } from "../ContextApi";
+import { useNotification } from "../NotificationContext";
 
 const ProfessionalNavbar = () => {
   const [showAuthModal, setShowAuthModal] = useState(false)
@@ -24,6 +25,7 @@ const ProfessionalNavbar = () => {
   const [signupStep, setSignupStep] = useState(1) // 1 = email, 2 = otp, 3 = details
   const [signupEmail, setSignupEmail] = useState("")
   const [otp, setOtp] = useState("")
+  const { showSuccess, showError, showWarning } = useNotification();
   const navigate = useNavigate();
   const { url, token, setToken, setUser } = useContext(StoreContext);
   const [loginData, setLoginData] = useState({
@@ -87,7 +89,15 @@ const ProfessionalNavbar = () => {
           setAuthMode('login')
           }
           
-        }).catch(err => console.log(err))
+          
+        }).catch((err) => {
+          console.log(err)
+          if(err.response.status === 401)
+            showError(err.response.data.error)
+          if(err.response.status === 400){
+            showError(err.response.data.error)
+          }
+        })
 
     }
   }
@@ -212,6 +222,7 @@ const ProfessionalNavbar = () => {
 
   return (
     <>
+
       <motion.nav
         initial={{ y: -100 }}
         animate={{ y: 0 }}
@@ -230,10 +241,10 @@ const ProfessionalNavbar = () => {
               transition={{ delay: 0.2, duration: 0.5 }}
               className="flex items-center space-x-2"
             >
-              <div className="w-8 h-8 bg-gradient-to-r from-orange-600 to-orange-600 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-gradient-to-r from-purple-600 to-purple-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">A</span>
               </div>
-              <span className="text-2xl font-black bg-gradient-to-r from-orange-600 to-orange-600 bg-clip-text text-transparent">
+              <span className="text-2xl font-black bg-gradient-to-r from-purple-600 to-purple-600 bg-clip-text text-transparent">
                 ApStore
               </span>
             </motion.div>
@@ -248,11 +259,11 @@ const ProfessionalNavbar = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 * index + 0.3, duration: 0.3 }}
                   whileHover={{ y: -2 }}
-                  className="text-gray-700 hover:text-orange-600 font-medium transition-colors duration-200 relative group"
+                  className="text-gray-700 hover:text-purple-600 font-medium transition-colors duration-200 relative group"
                 >
                   {link.name}
                   <motion.div
-                    className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-600 to-orange-600 group-hover:w-full transition-all duration-200"
+                    className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-purple-600 group-hover:w-full transition-all duration-200"
                   />
                 </MotionLink>
               ))}
@@ -289,7 +300,7 @@ const ProfessionalNavbar = () => {
                     }}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="text-gray-700 hover:text-orange-600 font-medium px-4 py-2 rounded-full transition-colors duration-200"
+                    className="text-gray-700 hover:text-purple-600 font-medium px-4 py-2 rounded-full transition-colors duration-200"
                   >
                     Login
                   </motion.button>
@@ -300,7 +311,7 @@ const ProfessionalNavbar = () => {
                     }}
                     whileHover={{ scale: 1.05, y: -1 }}
                     whileTap={{ scale: 0.95 }}
-                    className="bg-gradient-to-r from-orange-600 to-orange-600 text-white px-6 py-2 rounded-full font-medium shadow-lg hover:shadow-xl transition-all duration-200"
+                    className="bg-gradient-to-r from-purple-600 to-purple-600 text-white px-6 py-2 rounded-full font-medium shadow-lg hover:shadow-xl transition-all duration-200"
                   >
                     Sign Up
                   </motion.button>
@@ -316,7 +327,7 @@ const ProfessionalNavbar = () => {
                   <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
-                    className="relative p-2 text-gray-600 hover:text-orange-600 transition-colors duration-200"
+                    className="relative p-2 text-gray-600 hover:text-purple-600 transition-colors duration-200"
                   >
                     <Bell className="w-5 h-5" />
                     {notificationCount > 0 && (
@@ -344,14 +355,14 @@ const ProfessionalNavbar = () => {
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={()=>navigate('/cart')}
-                    className="relative p-2 text-gray-600 hover:text-orange-600 transition-colors duration-200"
+                    className="relative p-2 text-gray-600 hover:text-purple-600 transition-colors duration-200"
                   >
                     <ShoppingCart className="w-5 h-5" />
                     {cartCount > 0 && (
                       <motion.span
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
-                        className="absolute -top-1 -right-1 bg-orange-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center"
+                        className="absolute -top-1 -right-1 bg-purple-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center"
                       >
                         {cartCount}
                       </motion.span>
@@ -366,7 +377,7 @@ const ProfessionalNavbar = () => {
                       whileTap={{ scale: 0.95 }}
                       className="flex items-center space-x-2 bg-gray-100 hover:bg-gray-200 rounded-full px-3 py-2 transition-colors duration-200"
                     >
-                      <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full flex items-center justify-center">
+                      <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center">
                         <User className="w-4 h-4 text-white" />
                       </div>
                       <ChevronDown className={`w-4 h-4 text-gray-600 transition-transform duration-200 ${showUserMenu ? 'rotate-180' : ''}`} />
@@ -390,7 +401,7 @@ const ProfessionalNavbar = () => {
                               animate={{ opacity: 1, x: 0 }}
                               transition={{ delay: index * 0.05 }}
                               whileHover={{ backgroundColor: '#f3f4f6' }}
-                              className="w-full flex items-center space-x-3 px-4 py-3 text-left text-gray-700 hover:text-orange-600 transition-colors duration-200"
+                              className="w-full flex items-center space-x-3 px-4 py-3 text-left text-gray-700 hover:text-purple-600 transition-colors duration-200"
                             >
                               <item.icon className="w-4 h-4" />
                               <span className="font-medium">{item.label}</span>
@@ -409,7 +420,7 @@ const ProfessionalNavbar = () => {
                 animate={{ opacity: 1, rotate: 0 }}
                 transition={{ delay: 0.6, duration: 0.3 }}
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="md:hidden p-2 text-gray-600 hover:text-orange-600 transition-colors duration-200"
+                className="md:hidden p-2 text-gray-600 hover:text-purple-600 transition-colors duration-200"
               >
                 {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </motion.button>
@@ -435,7 +446,7 @@ const ProfessionalNavbar = () => {
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.05 }}
-                      className="block py-2 px-4 text-gray-700 hover:text-orange-600 hover:bg-gray-50 rounded-lg transition-all duration-200"
+                      className="block py-2 px-4 text-gray-700 hover:text-purple-600 hover:bg-gray-50 rounded-lg transition-all duration-200"
                     >
                       {link.name}
                     </motion.a>
@@ -451,7 +462,7 @@ const ProfessionalNavbar = () => {
                         setShowAuthModal(true)
                         setIsMobileMenuOpen(false)
                       }}
-                      className="w-full py-2 px-4 text-gray-700 hover:text-orange-600 hover:bg-gray-50 rounded-lg transition-all duration-200 text-left"
+                      className="w-full py-2 px-4 text-gray-700 hover:text-purple-600 hover:bg-gray-50 rounded-lg transition-all duration-200 text-left"
                     >
                       Login
                     </button>
@@ -461,7 +472,7 @@ const ProfessionalNavbar = () => {
                         setShowAuthModal(true)
                         setIsMobileMenuOpen(false)
                       }}
-                      className="w-full py-2 px-4 bg-gradient-to-r from-orange-600 to-orange-600 text-white rounded-lg font-medium"
+                      className="w-full py-2 px-4 bg-gradient-to-r from-purple-600 to-purple-600 text-white rounded-lg font-medium"
                     >
                       Sign Up
                     </button>
@@ -472,7 +483,7 @@ const ProfessionalNavbar = () => {
                       <div className="relative">
                         <ShoppingCart className="w-5 h-5 text-gray-600" />
                         {cartCount > 0 && (
-                          <span className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                          <span className="absolute -top-2 -right-2 bg-purple-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
                             {cartCount}
                           </span>
                         )}
@@ -484,7 +495,7 @@ const ProfessionalNavbar = () => {
                       <button
                         key={item.label}
                         onClick={item.action}
-                        className="w-full flex items-center space-x-3 py-2 px-4 text-left text-gray-700 hover:text-orange-600 hover:bg-gray-50 rounded-lg transition-all duration-200"
+                        className="w-full flex items-center space-x-3 py-2 px-4 text-left text-gray-700 hover:text-purple-600 hover:bg-gray-50 rounded-lg transition-all duration-200"
                       >
                         <item.icon className="w-4 h-4" />
                         <span>{item.label}</span>
@@ -546,7 +557,7 @@ const ProfessionalNavbar = () => {
                     type="email"
                     onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
                     placeholder="Email Address"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all duration-200"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-200"
                     required
                   />
 
@@ -557,7 +568,7 @@ const ProfessionalNavbar = () => {
                     type="password"
                     onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
                     placeholder="Password"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all duration-200"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-200"
                     required
                   />
 
@@ -568,7 +579,7 @@ const ProfessionalNavbar = () => {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={handleAuth}
-                    className="w-full bg-gradient-to-r from-orange-600 to-orange-600 text-white py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
+                    className="w-full bg-gradient-to-r from-purple-600 to-purple-600 text-white py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
                   >
                     Sign In
                   </motion.button>
@@ -585,7 +596,7 @@ const ProfessionalNavbar = () => {
                     value={signupEmail}
                     onChange={(e) => setSignupEmail(e.target.value)}
                     placeholder="Email Address"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all duration-200"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-200"
                     required
                   />
 
@@ -596,7 +607,7 @@ const ProfessionalNavbar = () => {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={handleSendOtp}
-                    className="w-full bg-orange-600 text-white py-3 rounded-xl font-semibold shadow-md hover:bg-orange-700 transition-all duration-200"
+                    className="w-full bg-purple-600 text-white py-3 rounded-xl font-semibold shadow-md hover:bg-purple-700 transition-all duration-200"
                   >
                     Get Verification Code
                   </motion.button>
@@ -613,7 +624,7 @@ const ProfessionalNavbar = () => {
                     value={otp}
                     onChange={(e) => setOtp(e.target.value)}
                     placeholder="Enter 6-digit code"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all duration-200 text-center text-lg tracking-widest"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-200 text-center text-lg tracking-widest"
                     maxLength={6}
                     required
                   />
@@ -638,7 +649,7 @@ const ProfessionalNavbar = () => {
                   </div>
 
                   <div className="text-center">
-                    <button className="text-sm text-orange-600 hover:text-orange-600 transition-colors duration-200">
+                    <button className="text-sm text-purple-600 hover:text-purple-600 transition-colors duration-200">
                       Didn't receive the code? Resend
                     </button>
                   </div>
@@ -656,7 +667,7 @@ const ProfessionalNavbar = () => {
                       placeholder="First Name"
                       value={signupFormData.fname}
                       onChange={(e) => setSignupFormData({ ...signupFormData, fname: e.target.value })}
-                      className="px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all duration-200"
+                      className="px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-200"
                     />
                     <motion.input
                       initial={{ opacity: 0, y: 10 }}
@@ -666,7 +677,7 @@ const ProfessionalNavbar = () => {
                       placeholder="Last Name"
                       value={signupFormData.lname}
                       onChange={(e) => setSignupFormData({ ...signupFormData, lname: e.target.value })}
-                      className="px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all duration-200"
+                      className="px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-200"
                     />
                   </div>
 
@@ -678,7 +689,7 @@ const ProfessionalNavbar = () => {
                     placeholder="Phone Number"
                     value={signupFormData.phone}
                     onChange={(e) => setSignupFormData({ ...signupFormData, phone: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all duration-200"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-200"
                   />
 
                   <motion.input
@@ -689,7 +700,7 @@ const ProfessionalNavbar = () => {
                     placeholder="Password (min 8 characters)"
                     value={signupFormData.password}
                     onChange={(e) => setSignupFormData({ ...signupFormData, password: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all duration-200"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-200"
                   />
 
                   <motion.input
@@ -700,7 +711,7 @@ const ProfessionalNavbar = () => {
                     placeholder="Confirm Password"
                     value={signupFormData.confirmPassword}
                     onChange={(e) => setSignupFormData({ ...signupFormData, confirmPassword: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all duration-200"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-200"
                   />
 
                   <div className="flex space-x-3 pt-2">
@@ -716,7 +727,7 @@ const ProfessionalNavbar = () => {
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={handleSignup}
-                      className="flex-1 bg-gradient-to-r from-orange-600 to-orange-600 text-white py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
+                      className="flex-1 bg-gradient-to-r from-purple-600 to-purple-600 text-white py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
                     >
                       Create Account
                     </motion.button>
@@ -731,7 +742,7 @@ const ProfessionalNavbar = () => {
                       Don't have an account?{" "}
                       <button
                         onClick={() => setAuthMode('signup')}
-                        className="text-orange-600 hover:text-orange-600 font-medium"
+                        className="text-purple-600 hover:text-purple-600 font-medium"
                       >
                         Sign up
                       </button>
@@ -741,7 +752,7 @@ const ProfessionalNavbar = () => {
                       Already have an account?{" "}
                       <button
                         onClick={() => setAuthMode('login')}
-                        className="text-orange-600 hover:text-orange-600 font-medium"
+                        className="text-purple-600 hover:text-purple-600 font-medium"
                       >
                         Log in
                       </button>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import { Search, Filter, ChevronDown, Star, ShoppingCart, Eye } from 'lucide-react';
+import { Search, Filter, ChevronDown, Star, ShoppingCart, Eye, MapIcon } from 'lucide-react';
 import { StoreContext } from '../ContextApi';
 import { useNavigate } from 'react-router-dom';
 
@@ -154,7 +154,7 @@ const ProductListing = () => {
                     value={filters.search}
                     onChange={(e) => handleFilterChange('search', e.target.value)}
                     placeholder="Search products..."
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-400 focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                   />
                 </div>
               </div>
@@ -165,7 +165,7 @@ const ProductListing = () => {
                 <select
                   value={filters.category}
                   onChange={(e) => handleFilterChange('category', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-400 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                 >
                   <option value="">All Categories</option>
                   {categories.map(category => (
@@ -185,14 +185,14 @@ const ProductListing = () => {
                     value={filters.minPrice}
                     onChange={(e) => handleFilterChange('minPrice', e.target.value)}
                     placeholder="Min"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-400 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                   />
                   <input
                     type="number"
                     value={filters.maxPrice}
                     onChange={(e) => handleFilterChange('maxPrice', e.target.value)}
                     placeholder="Max"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-400 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                   />
                 </div>
               </div>
@@ -207,7 +207,7 @@ const ProductListing = () => {
                     handleFilterChange('sortBy', sortBy);
                     handleFilterChange('sortOrder', sortOrder);
                   }}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-400 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                 >
                   <option value="createdAt-desc">Newest First</option>
                   <option value="createdAt-asc">Oldest First</option>
@@ -260,7 +260,7 @@ const ProductListing = () => {
                 <select
                   value={filters.limit}
                   onChange={(e) => handleFilterChange('limit', parseInt(e.target.value))}
-                  className="px-3 py-1 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-orange-400 focus:border-transparent"
+                  className="px-3 py-1 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                 >
                   <option value={6}>6</option>
                   <option value={12}>12</option>
@@ -312,7 +312,7 @@ const ProductListing = () => {
                         className="w-full h-48 object-cover rounded-t-lg"
                       />
                       {product.stock < 5 && product.stock > 0 && (
-                        <div className="absolute top-2 right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded">
+                        <div className="absolute top-2 right-2 bg-purple-600 text-white text-xs px-2 py-1 rounded">
                           Only {product.stock} left!
                         </div>
                       )}
@@ -355,15 +355,9 @@ const ProductListing = () => {
                         </div>
                         <div className="flex gap-2">
                           <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
-                            <Eye className="w-4 h-4" />
+                            <MapIcon className="w-4 h-4" />
                           </button>
-                          <button 
-                            disabled={product.stock === 0}
-                            className="flex items-center gap-1 px-3 py-2 bg-orange-400 text-white text-sm font-medium rounded-md hover:bg-orange-400 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
-                          >
-                            <ShoppingCart className="w-4 h-4" />
-                            Add to Cart
-                          </button>
+                          
                         </div>
                       </div>
                     </div>
@@ -402,7 +396,7 @@ const ProductListing = () => {
                         onClick={() => handlePageChange(pageNum)}
                         className={`px-3 py-2 text-sm font-medium rounded-md ${
                           pageNum === pagination.currentPage
-                            ? 'bg-orange-400 text-white'
+                            ? 'bg-purple-600 text-white'
                             : 'text-gray-500 bg-white border border-gray-300 hover:bg-gray-50'
                         }`}
                       >

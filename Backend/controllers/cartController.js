@@ -21,11 +21,13 @@ const getCart = async (req, res) => {
     const total = cart.items.reduce((sum, item) => {
       return sum + item.product.price * item.quantity
     }, 0)
-
+    const fee = 25;
     res.json({
       cart: {
         items: cart.items,
-        total: total.toFixed(2),
+        platfromfee:fee,
+        subTotal: total.toFixed(2),
+        total: (total+fee).toFixed(2),
       },
     })
   } catch (error) {

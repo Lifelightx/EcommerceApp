@@ -22,7 +22,7 @@ const ProductCard = memo(({ product, index }) => {
               : product.badge === "New"
                 ? "bg-green-500"
                 : product.badge === "Popular"
-                  ? "bg-orange-500"
+                  ? "bg-purple-500"
                   : "bg-red-500"
           }`}
         >
@@ -50,7 +50,7 @@ const ProductCard = memo(({ product, index }) => {
 
       {/* Details */}
       <div className="p-6">
-        <h3 className="font-bold text-lg text-gray-900 mb-2 group-hover:text-orange-600 transition-colors duration-200">
+        <h3 className="font-bold text-lg text-gray-900 mb-2 group-hover:text-purple-600 transition-colors duration-200">
           {product.name}
         </h3>
 
@@ -77,7 +77,7 @@ const ProductCard = memo(({ product, index }) => {
             <span className="text-2xl font-bold text-gray-900">{product.price}</span>
             <span className="text-lg text-gray-500 line-through">{product.originalPrice}</span>
           </div>
-          <button className="bg-orange-600 hover:bg-orange-700 text-white p-3 rounded-full transition-colors duration-200">
+          <button className="bg-purple-600 hover:bg-purple-700 text-white p-3 rounded-full transition-colors duration-200">
             <ShoppingBag className="w-5 h-5" />
           </button>
         </div>
@@ -127,21 +127,21 @@ const EcommerceHomepage = () => {
       subtitle: "Discover the Latest Trends",
       description: "Elevate your style with our curated selection of premium products",
       cta: "Shop Now",
-      bg: "from-orange-600 via-orange-600 to-cyan-500",
+      bg: "from-purple-600 via-purple-600 to-cyan-500",
     },
     {
       title: "Exclusive Summer Sale",
       subtitle: "Up to 70% Off",
       description: "Don't miss out on our biggest sale of the year",
       cta: "Explore Deals",
-      bg: "from-orange-500 via-pink-500 to-red-500",
+      bg: "from-purple-500 via-pink-500 to-red-500",
     },
     {
       title: "New Arrivals",
       subtitle: "Fresh Styles Weekly",
       description: "Stay ahead with the latest fashion and lifestyle products",
       cta: "See What's New",
-      bg: "from-green-500 via-teal-500 to-orange-500",
+      bg: "from-green-500 via-teal-500 to-purple-500",
     },
   ]
 
@@ -178,7 +178,7 @@ const EcommerceHomepage = () => {
     },
     {
       id: 4,
-      name: "orangetooth Speaker",
+      name: "purpletooth Speaker",
       price: "₹79",
       originalPrice: "₹99",
       rating: 4.7,
@@ -189,12 +189,12 @@ const EcommerceHomepage = () => {
   ]
 
   const categories = [
-    { name: "Electronics", icon: "⚡", count: "2.5k+", color: "from-orange-500 to-orange-600" },
+    { name: "Electronics", icon: "⚡", count: "2.5k+", color: "from-purple-500 to-purple-600" },
     { name: "Fashion", icon: "👕", count: "1.8k+", color: "from-pink-500 to-rose-600" },
     { name: "Home & Garden", icon: "🏡", count: "950+", color: "from-green-500 to-teal-600" },
-    { name: "Sports", icon: "⚽", count: "1.2k+", color: "from-orange-500 to-red-600" },
-    { name: "Beauty", icon: "💄", count: "680+", color: "from-orange-500 to-pink-600" },
-    { name: "Books", icon: "📚", count: "420+", color: "from-indigo-500 to-orange-600" },
+    { name: "Sports", icon: "⚽", count: "1.2k+", color: "from-purple-500 to-red-600" },
+    { name: "Beauty", icon: "💄", count: "680+", color: "from-purple-500 to-pink-600" },
+    { name: "Books", icon: "📚", count: "420+", color: "from-indigo-500 to-purple-600" },
   ]
 
   const stats = [
@@ -350,7 +350,7 @@ const EcommerceHomepage = () => {
 
       {/* Stats Section */}
       <section className="py-20 bg-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-orange-50 to-orange-50 opacity-50" />
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-50 to-purple-50 opacity-50" />
         <div className="container mx-auto px-4 relative">
           <motion.div
             variants={containerVariants}
@@ -371,7 +371,7 @@ const EcommerceHomepage = () => {
                   whileInView={{ scale: 1, rotate: 0 }}
                   transition={{ delay: index * 0.1, type: "spring", damping: 15 }}
                   viewport={{ once: true }}
-                  className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full mb-4 text-white"
+                  className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full mb-4 text-white"
                 >
                   <stat.icon className="w-8 h-8" />
                 </motion.div>
@@ -441,7 +441,7 @@ const EcommerceHomepage = () => {
                   <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-200">
                     {category.icon}
                   </div>
-                  <h3 className="font-bold text-lg text-gray-900 mb-2 group-hover:text-orange-600 transition-colors duration-200">
+                  <h3 className="font-bold text-lg text-gray-900 mb-2 group-hover:text-purple-600 transition-colors duration-200">
                     {category.name}
                   </h3>
                   <p className="text-gray-500 text-sm">{category.count} items</p>
@@ -450,7 +450,7 @@ const EcommerceHomepage = () => {
                 <motion.div
                   initial={{ scaleX: 0 }}
                   whileHover={{ scaleX: 1 }}
-                  className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-orange-500 to-orange-600 origin-left"
+                  className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-purple-500 to-purple-600 origin-left"
                 />
               </motion.div>
             ))}
@@ -488,7 +488,7 @@ const EcommerceHomepage = () => {
             <motion.button
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
-              className="group bg-gradient-to-r from-orange-600 to-orange-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:from-orange-700 hover:to-orange-700 transition-all duration-300 inline-flex items-center gap-3"
+              className="group bg-gradient-to-r from-purple-600 to-purple-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:from-purple-700 hover:to-purple-700 transition-all duration-300 inline-flex items-center gap-3"
             >
               View All Products
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" />
@@ -498,7 +498,7 @@ const EcommerceHomepage = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-gradient-to-br from-orange-200 via-orange-100 to-orange-300 text-white relative overflow-hidden">
+      <section className="py-20 bg-gradient-to-br from-purple-200 via-purple-100 to-purple-300 text-white relative overflow-hidden">
         <div className="absolute inset-0 opacity-40">
           <div
             className="absolute inset-0"
@@ -560,10 +560,10 @@ const EcommerceHomepage = () => {
                   viewport={{ once: true }}
                   className={`inline-flex items-center justify-center w-20 h-20 rounded-full mb-6 ${
                     index === 0
-                      ? "bg-gradient-to-r from-orange-500 to-orange-600"
+                      ? "bg-gradient-to-r from-purple-500 to-purple-600"
                       : index === 1
-                        ? "bg-gradient-to-r from-orange-500 to-pink-500"
-                        : "bg-gradient-to-r from-orange-500 to-red-500"
+                        ? "bg-gradient-to-r from-purple-500 to-pink-500"
+                        : "bg-gradient-to-r from-purple-500 to-red-500"
                   }`}
                 >
                   <feature.icon className="w-10 h-10" />
@@ -610,12 +610,12 @@ const EcommerceHomepage = () => {
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="flex-1 px-6 py-4 rounded-l-full text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-300 transition-all duration-200"
+                className="flex-1 px-6 py-4 rounded-l-full text-gray-900 focus:outline-none focus:ring-4 focus:ring-purple-300 transition-all duration-200"
               />
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="bg-white text-orange-600 px-8 py-4 rounded-r-full font-semibold hover:bg-gray-100 transition-colors duration-200"
+                className="bg-white text-purple-600 px-8 py-4 rounded-r-full font-semibold hover:bg-gray-100 transition-colors duration-200"
               >
                 Subscribe
               </motion.button>
