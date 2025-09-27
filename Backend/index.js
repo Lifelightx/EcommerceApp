@@ -16,13 +16,13 @@ const orderRoutes = require("./routes/orders")
 const cartRoutes = require("./routes/cart")
 const reviewRoutes = require("./routes/review")
 const app = express()
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 4500
 
 connectDB()
 
 // CORS configuration
 const corsOptions = {
-  origin: ["http://localhost:5173", "http://localhost:5174"], // React dev server
+  origin: ["http://localhost:5173", "http://localhost:5174","http://192.168.56.1:5173"], // React dev server
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],

@@ -8,114 +8,116 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
 // Place order (supports both online and COD)
 const placeOrder = async (req, res) => {
-  const frontend_url = process.env.FRONTEND_URL
+  const frontend_url = process.env.FRONTEND_URL;
 
   try {
-    const { items, amount, address, paymentMethod = 'online' } = req.body
+    const { items, amount, address, paymentMethod = 'online' } = req.body;
     const userId = req.user.id;
-    console.log(amount)
-    // Validate required fields
+
     if (!userId || !items || !amount || !address) {
-      return res.status(400).json({ success: false, message: 'Missing required fields' })
+      return res.status(400).json({ success: false, message: 'Missing required fields' });
     }
 
-    // Validate payment method
     if (!['online', 'cash_on_delivery'].includes(paymentMethod)) {
-      return res.status(400).json({ success: false, message: 'Invalid payment method' })
+      return res.status(400).json({ success: false, message: 'Invalid payment method' });
     }
 
     // Create new order
     const newOrder = new orderModel({
-      userId: userId,
-      items: items,
-      amount: amount,
-      address: address,
-      paymentMethod: paymentMethod,
-      payment: paymentMethod === 'cash_on_delivery' ? false : true, // COD orders are considered "paid"
-      status: paymentMethod === 'cash_on_delivery' ? 'Order Confirmed' : 'Order Placed'
-    })
+      userId,
+      items,
+      amount,
+      address,
+      paymentMethod,
+      payment: paymentMethod === 'cash_on_delivery' ? false : false, // for COD not paid yet
+      status: paymentMethod === 'cash_on_delivery' ? 'Order Confirmed' : 'Pending Payment'
+    });
 
-    await newOrder.save()
+    await newOrder.save();
 
-    for (const item of items) {
-      await productModel.findByIdAndUpdate(item._id, {
-        $inc: { stock: -item.quantity }
-      });
-      // console.log(item.quantity, item)
-    }
-
-    // Clear user's cart
-    await cartModel.findOneAndUpdate(
-      { user: userId },       // find by user field
-      { $set: { items: [] } } // clear items array
-    )
-
-
-    // Handle payment method
     if (paymentMethod === 'online') {
-      // Create Stripe session for online payment
+      // Stripe line items
       const line_items = items.map((item) => ({
         price_data: {
           currency: 'inr',
-          product_data: {
-            name: item.name
-          },
+          product_data: { name: item.name },
           unit_amount: item.price * 100,
         },
         quantity: item.quantity
-      }))
+      }));
 
       // Add delivery charges
       line_items.push({
         price_data: {
           currency: 'inr',
-          product_data: {
-            name: 'Delivery Charges'
-          },
+          product_data: { name: 'Delivery Charges' },
           unit_amount: 25 * 100,
         },
         quantity: 1
-      })
+      });
 
       const session = await stripe.checkout.sessions.create({
-        line_items: line_items,
+        line_items,
         mode: 'payment',
         success_url: `${frontend_url}/verify?success=true&orderId=${newOrder._id}`,
         cancel_url: `${frontend_url}/verify?success=false&orderId=${newOrder._id}`,
-        metadata: {
-          orderId: newOrder._id.toString()
-        }
-      })
+        metadata: { orderId: newOrder._id.toString(), userId: userId.toString() }
+      });
 
-      res.json({
+      return res.json({
         success: true,
         session_url: session.url,
         orderId: newOrder._id,
         paymentMethod: 'online'
-      })
+      });
+
     } else {
-      // Cash on delivery - order is immediately confirmed
-      res.json({
+      // COD: reduce stock + empty cart immediately
+      for (const item of items) {
+        await productModel.findByIdAndUpdate(item._id, {
+          $inc: { stock: -item.quantity }
+        });
+      }
+
+      await cartModel.findOneAndUpdate({ user: userId }, { $set: { items: [] } });
+
+      return res.json({
         success: true,
         message: 'Order placed successfully! You will pay cash on delivery.',
         orderId: newOrder._id,
         paymentMethod: 'cash_on_delivery',
         order: newOrder
-      })
+      });
     }
 
   } catch (err) {
-    console.log(err)
-    res.status(500).json({ success: false, message: 'Server Error' })
+    console.log(err);
+    res.status(500).json({ success: false, message: 'Server Error' });
   }
-}
+};
+
 
 // Verify online payment order
 const verifyOrder = async (req, res) => {
   const { orderId, success } = req.body
-
+  const order = await orderModel.findById(orderId);
+    if (!order) {
+      return res.status(404).json({ success: false, message: 'Order not found' });
+    }
   try {
     if (success == "true") {
+       for (const item of order.items) {
+        await productModel.findByIdAndUpdate(item._id, {
+          $inc: { stock: -item.quantity }
+        });
+      }
+
+      // Empty cart
+      await cartModel.findOneAndUpdate(
+        { user: order.userId },
+        { $set: { items: [] } }
+      );
+
       await orderModel.findByIdAndUpdate(orderId, {
         payment: true,
         status: 'Order Confirmed'

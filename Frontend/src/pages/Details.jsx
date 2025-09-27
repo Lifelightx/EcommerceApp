@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Star, ShoppingCart, Heart, Share2, Truck, Shield, RefreshCw } from 'lucide-react';
+import { ArrowLeft, Star, ShoppingCart, Heart, Share2, Truck, Shield, RefreshCw, Car } from 'lucide-react';
 import { StoreContext } from '../ContextApi';
 import { useNotification } from '../NotificationContext';
 import axios from 'axios';
@@ -105,14 +105,23 @@ const ProductDetails = () => {
     showSuccess('Added to wishlist!');
   };
 
-  const handleShare = () => {
-    // Copy product URL to clipboard
+  const handleShare = async () => {
     const productUrl = window.location.href;
-    navigator.clipboard.writeText(productUrl).then(() => {
-      showSuccess('Product link copied to clipboard!');
-    }).catch(() => {
-      showError('Failed to copy link');
-    });
+
+    try {
+      await navigator.clipboard.writeText(productUrl);
+      showSuccess("Product link copied to clipboard!");
+    } catch (err) {
+      console.error("Clipboard error:", err);
+      // Fallback method for insecure contexts
+      const textarea = document.createElement("textarea");
+      textarea.value = productUrl;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+      showSuccess("⚡ Product link copied !");
+    }
   };
 
   const renderStars = (rating) => {
@@ -283,7 +292,7 @@ const ProductDetails = () => {
                 <button
                   onClick={handleAddToCart}
                   disabled={product.stock === 0 || addingToCart}
-                  className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-purple-500 text-white font-medium rounded-md hover:bg-purple-500 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+                  className="flex-1 flex items-center justify-center gap-2 cursor-pointer px-6 py-3 bg-purple-500 text-white font-medium rounded-md hover:bg-purple-500 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
                 >
                   {addingToCart ? (
                     <>
@@ -299,17 +308,17 @@ const ProductDetails = () => {
                 </button>
 
                 <button 
-                  onClick={handleAddToWishlist}
-                  className="p-3 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                  onClick={()=>navigate('/cart')}
+                  className="p-3 border border-gray-300 cursor-pointer rounded-md hover:bg-purple-200 transition-colors"
                 >
-                  <Heart className="w-5 h-5 text-gray-600" />
+                  <ShoppingCart  className="w-5 h-5 text-gray-600" />
                 </button>
 
                 <button 
                   onClick={handleShare}
                   className="p-3 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
                 >
-                  <Share2 className="w-5 h-5 text-gray-600" />
+                  <Share2 className="w-5 h-5 text-green-600" />
                 </button>
               </div>
             </div>

@@ -13,7 +13,9 @@ import {
   LogOut,
   ChevronDown,
   Heart,
-  Bell
+  Bell,
+  Eye,
+  EyeOff
 } from "lucide-react"
 import axios from "axios";
 import { StoreContext } from "../ContextApi";
@@ -41,7 +43,7 @@ const ProfessionalNavbar = () => {
   })
   const [showUserMenu, setShowUserMenu] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [cartCount, setCartCount] = useState(3)
+  
   const [notificationCount, setNotificationCount] = useState(2)
   const [isScrolled, setIsScrolled] = useState(false)
 
@@ -182,8 +184,8 @@ const ProfessionalNavbar = () => {
 
   const handleLogout = () => {
     // setIsLoggedIn(false)
-     setToken("");
      navigate("/")
+     setToken("");
     setUser(null);
 
   // Clear localStorage
@@ -219,7 +221,7 @@ const ProfessionalNavbar = () => {
     { icon: Settings, label: 'Profile', action: () => navigate("/profile") },
     { icon: LogOut, label: 'Logout', action: handleLogout }
   ]
-
+  const [showPassword ,setShowPassword] = useState(false)
   return (
     <>
 
@@ -270,19 +272,7 @@ const ProfessionalNavbar = () => {
             </div>
 
             {/* Search Bar */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.4, duration: 0.4 }}
-              className="hidden lg:flex items-center bg-gray-100 rounded-full px-4 py-2 w-64"
-            >
-              <Search className="w-4 h-4 text-gray-500 mr-2" />
-              <input
-                type="text"
-                placeholder="Search products..."
-                className="bg-transparent flex-1 outline-none text-sm text-gray-700 placeholder-gray-500"
-              />
-            </motion.div>
+
 
             {/* Right Side Actions */}
             <div className="flex items-center space-x-4">
@@ -300,7 +290,7 @@ const ProfessionalNavbar = () => {
                     }}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="text-gray-700 hover:text-purple-600 font-medium px-4 py-2 rounded-full transition-colors duration-200"
+                    className="text-gray-700 hover:text-purple-600 cursor-pointer font-medium px-4 py-2 rounded-full transition-colors duration-200"
                   >
                     Login
                   </motion.button>
@@ -311,7 +301,7 @@ const ProfessionalNavbar = () => {
                     }}
                     whileHover={{ scale: 1.05, y: -1 }}
                     whileTap={{ scale: 0.95 }}
-                    className="bg-gradient-to-r from-purple-600 to-purple-600 text-white px-6 py-2 rounded-full font-medium shadow-lg hover:shadow-xl transition-all duration-200"
+                    className="bg-gradient-to-r from-purple-600 to-purple-600 cursor-pointer text-white px-6 py-2 rounded-full font-medium shadow-lg hover:shadow-xl transition-all duration-200"
                   >
                     Sign Up
                   </motion.button>
@@ -323,50 +313,18 @@ const ProfessionalNavbar = () => {
                   transition={{ delay: 0.5, duration: 0.4 }}
                   className="hidden md:flex items-center space-x-4"
                 >
-                  {/* Notifications */}
-                  <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    className="relative p-2 text-gray-600 hover:text-purple-600 transition-colors duration-200"
-                  >
-                    <Bell className="w-5 h-5" />
-                    {notificationCount > 0 && (
-                      <motion.span
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center"
-                      >
-                        {notificationCount}
-                      </motion.span>
-                    )}
-                  </motion.button>
-
-                  {/* Wishlist */}
-                  <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    className="p-2 text-gray-600 hover:text-red-500 transition-colors duration-200"
-                  >
-                    <Heart className="w-5 h-5" />
-                  </motion.button>
+                 
+                  
 
                   {/* Cart */}
                   <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={()=>navigate('/cart')}
-                    className="relative p-2 text-gray-600 hover:text-purple-600 transition-colors duration-200"
+                    className="relative p-2 text-gray-600 hover:text-purple-600 cursor-pointer transition-colors duration-200"
                   >
-                    <ShoppingCart className="w-5 h-5" />
-                    {cartCount > 0 && (
-                      <motion.span
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        className="absolute -top-1 -right-1 bg-purple-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center"
-                      >
-                        {cartCount}
-                      </motion.span>
-                    )}
+                    <ShoppingCart className="w-5 h-5 text-purple-600" />
+                    
                   </motion.button>
 
                   {/* User Menu */}
@@ -375,7 +333,7 @@ const ProfessionalNavbar = () => {
                       onClick={() => setShowUserMenu(!showUserMenu)}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      className="flex items-center space-x-2 bg-gray-100 hover:bg-gray-200 rounded-full px-3 py-2 transition-colors duration-200"
+                      className="flex items-center space-x-2 bg-gray-100 cursor-pointer hover:bg-gray-200 rounded-full px-3 py-2 transition-colors duration-200"
                     >
                       <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center">
                         <User className="w-4 h-4 text-white" />
@@ -401,7 +359,7 @@ const ProfessionalNavbar = () => {
                               animate={{ opacity: 1, x: 0 }}
                               transition={{ delay: index * 0.05 }}
                               whileHover={{ backgroundColor: '#f3f4f6' }}
-                              className="w-full flex items-center space-x-3 px-4 py-3 text-left text-gray-700 hover:text-purple-600 transition-colors duration-200"
+                              className="w-full flex items-center space-x-3 px-4 py-3 cursor-pointer text-left text-gray-700 hover:text-purple-600 transition-colors duration-200"
                             >
                               <item.icon className="w-4 h-4" />
                               <span className="font-medium">{item.label}</span>
@@ -483,7 +441,7 @@ const ProfessionalNavbar = () => {
                       <div className="relative">
                         <ShoppingCart className="w-5 h-5 text-gray-600" />
                         {cartCount > 0 && (
-                          <span className="absolute -top-2 -right-2 bg-purple-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                          <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
                             {cartCount}
                           </span>
                         )}
@@ -561,16 +519,24 @@ const ProfessionalNavbar = () => {
                     required
                   />
 
-                  <motion.input
+                  <div className="relative">
+                    <motion.input
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1 }}
-                    type="password"
+                    type={showPassword?"text":"password"}
                     onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
                     placeholder="Password"
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-200"
                     required
                   />
+                  <span className="absolute top-4 right-3" onClick={()=> setShowPassword(!showPassword)}>
+                    {showPassword?
+                    <Eye className="w-5 h-5 text-gray-500 cursor-pointer" />:
+                    <EyeOff className="w-5 h-5 text-gray-500 cursor-pointer" />
+                    }
+                  </span>
+                  </div>
 
                   <motion.button
                     initial={{ opacity: 0, y: 10 }}
@@ -742,7 +708,7 @@ const ProfessionalNavbar = () => {
                       Don't have an account?{" "}
                       <button
                         onClick={() => setAuthMode('signup')}
-                        className="text-purple-600 hover:text-purple-600 font-medium"
+                        className="text-purple-600 hover:text-purple-600 font-medium cursor-pointer"
                       >
                         Sign up
                       </button>
@@ -752,7 +718,7 @@ const ProfessionalNavbar = () => {
                       Already have an account?{" "}
                       <button
                         onClick={() => setAuthMode('login')}
-                        className="text-purple-600 hover:text-purple-600 font-medium"
+                        className="text-purple-600 hover:text-purple-600 font-medium cursor-pointer"
                       >
                         Log in
                       </button>

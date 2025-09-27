@@ -138,7 +138,7 @@ function CartPage() {
             <p className="text-gray-600 mb-8 text-center max-w-md">
               Looks like you haven't added anything to your cart yet. Start shopping to fill it up!
             </p>
-            <button className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg">
+            <button onClick={()=> navigate('/shop')} className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg">
               Continue Shopping
             </button>
           </div>
