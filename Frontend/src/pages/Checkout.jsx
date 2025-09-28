@@ -92,6 +92,7 @@ function Checkout() {
       if (response.ok) {
         const data = await response.json();
         setCartItems(data.cart?.items || []);
+        console.log(data.cart)
         setOrderTotals({
           platformFee: data.cart?.platfromfee || 30,
           total: Number(data.cart?.total) || 0,
