@@ -1,4 +1,5 @@
 const { verify } = require('jsonwebtoken')
+const mongoose = require('mongoose')
 const orderModel = require('../models/Order')
 const userModel = require('../models/User')
 const cartModel = require('../models/Cart')
@@ -138,6 +139,7 @@ const userOrders = async (req, res) => {
   try {
     const orders = await orderModel.find({ userId: req.user.id }).sort({ date: -1 })
     res.json({ success: true, orders })
+    
   } catch (error) {
     console.log(error)
     res.json({ success: false, message: 'Error fetching orders' })
@@ -154,6 +156,42 @@ const listOrders = async (req, res) => {
     res.json({ success: false, message: 'Error fetching orders' })
   }
 }
+const listSellerOrders = async (req, res) => {
+  try {
+    const sellerId = req.user.id; // from JWT
+    const orders = await orderModel.find().sort({ date: -1 });
+
+    const sellerOrders = [];
+
+    for (const order of orders) {
+      // get all productIds from items
+      const productIds = order.items.map(i => i._id);
+      // check if any of these belong to seller
+      const products = await productModel.find({
+        _id: { $in: productIds },
+        seller: sellerId
+      });
+      if (products.length > 0) {
+        // OPTIONAL: filter only seller’s items
+        const filteredItems = order.items.filter(item =>
+          products.some(p => p._id.toString() === item._id.toString())
+        );
+
+        sellerOrders.push({
+          ...order.toObject(),
+          items: filteredItems  // only seller’s items
+        });
+      }
+    }
+
+    res.json({ success: true, data: sellerOrders });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Error fetching seller orders" });
+  }
+};
+
+
 
 // Update order status (admin)
 const updateOrderStatus = async (req, res) => {
@@ -243,5 +281,6 @@ module.exports = {
   listOrders,
   updateOrderStatus,
   cancelOrder,
-  getOrderById
+  getOrderById,
+  listSellerOrders
 }

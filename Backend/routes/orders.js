@@ -6,9 +6,10 @@ const {
     listOrders, 
     updateOrderStatus, 
     cancelOrder,
-    getOrderById 
+    getOrderById,
+    listSellerOrders 
 } = require('../controllers/orderController')
-const { authenticateToken } = require('../middleware/auth')
+const { authenticateToken, authorize } = require('../middleware/auth')
 const orderRouter = express.Router()
 
 // Place order (both online and COD)
@@ -20,6 +21,7 @@ orderRouter.post('/verify', verifyOrder)
 // Get user orders
 orderRouter.get('/userorders', authenticateToken, userOrders)
 
+orderRouter.get('/sellerOrders', authenticateToken, authorize(["seller"]), listSellerOrders)
 // Get all orders (admin)
 orderRouter.get('/list', listOrders)
 
