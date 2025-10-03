@@ -29,7 +29,7 @@ orderRouter.get('/list', listOrders)
 orderRouter.get('/:orderId', authenticateToken, getOrderById)
 
 // Update order status (admin)
-orderRouter.post('/status', updateOrderStatus)
+orderRouter.put('/status', updateOrderStatus)
 
 // Cancel order (user)
 orderRouter.post('/cancel', authenticateToken, cancelOrder)

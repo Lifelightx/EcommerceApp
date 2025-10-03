@@ -15,88 +15,78 @@ const VerifyPayment = () => {
 
     // Get URL parameters
     const success = searchParams.get('success');
-    const orderId = searchParams.get('orderId');
+    const orderIds = searchParams.get('orderIds')?.split(',') || [];
 
     useEffect(() => {
-        if (orderId && success !== null) {
-            verifyPayment();
-        } else {
-            setError('Missing required parameters');
-            setLoading(false);
-        }
-    }, [orderId, success]);
+    if (orderIds.length > 0 && success !== null) {
+        verifyPayment();
+    } else {
+        setError('Missing required parameters');
+        setLoading(false);
+    }
+}, [success]);
 
     const verifyPayment = async () => {
-        try {
-            setLoading(true);
+    try {
+        setLoading(true);
 
-            const response = await fetch(`${url}/api/orders/verify`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    orderId: orderId,
-                    success: success
-                })
+        const response = await fetch(`${url}/api/orders/verify`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                orderIds,   // <-- fix
+                success
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            setVerificationResult({
+                success: success === 'true',
+                message: data.message
             });
 
-            const data = await response.json();
-
-            if (data.success) {
-                setVerificationResult({
-                    success: success === 'true',
-                    message: data.message
-                });
-
-                // If payment was successful, fetch order details
-                if (success === 'true') {
-                    await fetchOrderDetails();
-                }
-
-                // Auto redirect after 5 seconds
-                setTimeout(() => {
-                    if (success === 'true') {
-                        navigate('/orders'); // Redirect to orders page on success
-                    } else {
-                        navigate('/cart'); // Redirect to cart on failure
-                    }
-                }, 5000);
-
-            } else {
-                setError(data.message || 'Payment verification failed');
+            if (success === 'true') {
+                await fetchOrderDetails();
             }
-        } catch (error) {
-            console.error('Payment verification error:', error);
-            setError('Network error occurred while verifying payment');
-        } finally {
-            setLoading(false);
+
+            setTimeout(() => {
+                navigate(success === 'true' ? '/orders' : '/cart');
+            }, 5000);
+
+        } else {
+            setError(data.message || 'Payment verification failed');
         }
-    };
+    } catch (error) {
+        console.error('Payment verification error:', error);
+        setError('Network error occurred while verifying payment');
+    } finally {
+        setLoading(false);
+    }
+};
 
     const fetchOrderDetails = async () => {
-        try {
-            if (!token) return;
+    try {
+        if (!token) return;
 
-            const response = await fetch(`${url}/api/orders/userorders`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                 // You might need to adjust this based on your API
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                // Find the specific order (you might need to adjust this logic)
-                const order = data.data?.find(order => order._id === orderId);
-                setOrderDetails(order);
+        const response = await fetch(`${url}/api/orders/userorders`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
             }
-        } catch (error) {
-            console.error('Error fetching order details:', error);
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            const orders = data.data?.filter(order => orderIds.includes(order._id));
+            setOrderDetails(orders);
         }
-    };
+    } catch (error) {
+        console.error('Error fetching order details:', error);
+    }
+};
 
     const handleContinueShopping = () => {
         navigate('/');
