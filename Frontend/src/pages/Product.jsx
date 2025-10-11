@@ -303,8 +303,9 @@ const ProductListing = () => {
             ) : (
               <div  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {products.map(product => (
-                  <div key={product._id} onClick={()=> navigate(`/details/${product._id}`)} className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-200">
+                  <div key={product._id} onClick={()=> navigate(`/details/${product._id}`)} className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border border-purple-200">
                     {/* Product Image */}
+                    {console.log(product)}
                     <div className="relative">
                       <img
                         src={`${url}${product.images[0]}`}

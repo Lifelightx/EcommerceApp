@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useContext } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, FlatTree } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Package,
@@ -86,10 +86,11 @@ const Navbar = () => {
         .catch(err => console.log(err));
     }
   };
-
+  const [loding, setLoading] = useState(false);
   // Signup Step 1: Send OTP
   const handleSendOtp = () => {
     if (!signupEmail) return alert("Please enter email");
+    setLoading(true)
     axios.post(`${url}/api/auth/send-otp`, { email: signupEmail })
       .then(res => res.status === 200 && setSignupStep(2))
       .catch((err) => console.log(err) );
@@ -145,15 +146,12 @@ const Navbar = () => {
     { name: 'Dashboard', href: '/dashboard', icon: BarChart3 },
     { name: 'Products', href: '/products', icon: Package },
     { name: 'Orders', href: '/orders', icon: ShoppingBag },
-    { name: 'Analytics', href: '/analytics', icon: TrendingUp },
-    { name: 'Customers', href: '/customers', icon: Users }
+    
   ];
 
   const sellerUserMenuItems = [
     { icon: Plus, label: 'Add Product', action: () => navigate("/add-product") },
     { icon: FileText, label: 'Reports', action: () => navigate("/reports") },
-    { icon: DollarSign, label: 'Payouts', action: () => navigate("/payouts") },
-    { icon: Settings, label: 'Store Settings', action: () => navigate("/store-settings") },
     { icon: User, label: 'Profile', action: () => navigate("/profile") },
     { icon: LogOut, label: 'Logout', action: handleLogout }
   ];
@@ -171,10 +169,10 @@ const Navbar = () => {
         <div className="container mx-auto px-4 flex items-center justify-between h-16">
           {/* Logo */}
           <motion.div className="flex items-center space-x-2 cursor-pointer" onClick={() => navigate("/")}>
-            <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-r from-red-500 to-red-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">S</span>
             </div>
-            <span className="text-2xl font-black bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent">SellerHub</span>
+            <span className="text-2xl font-black bg-gradient-to-r from-red-500 to-red-600 bg-clip-text text-transparent">ApSeller</span>
           </motion.div>
 
           {/* Desktop Links */}
@@ -184,14 +182,14 @@ const Navbar = () => {
                 <MotionLink
                   key={link.name}
                   to={link.href}
-                  className="flex items-center space-x-2 text-gray-700 hover:text-orange-500 font-medium px-3 py-2 rounded-lg hover:bg-orange-50 relative group"
+                  className="flex items-center space-x-2 text-gray-700 hover:text-red-500 font-medium px-3 py-2 rounded-lg hover:bg-red-50 relative group"
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 * i + 0.3 }}
                 >
                   <link.icon className="w-4 h-4" />
                   <span>{link.name}</span>
-                  <motion.div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-500 to-orange-600 group-hover:w-full transition-all duration-200" />
+                  <motion.div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-red-500 to-red-600 group-hover:w-full transition-all duration-200" />
                 </MotionLink>
               ))}
             </div>
@@ -201,12 +199,12 @@ const Navbar = () => {
           <div className="flex items-center space-x-4">
             {!sellerToken ? (
               <div className="hidden md:flex items-center space-x-3">
-                <button onClick={() => { setAuthMode('login'); setShowAuthModal(true); }} className="px-4 py-2 text-gray-700 rounded-full hover:text-orange-500 transition">Login</button>
-                <button onClick={() => { setAuthMode('signup'); setShowAuthModal(true); }} className="px-6 py-2 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-medium">Start Selling</button>
+                <button onClick={() => { setAuthMode('login'); setShowAuthModal(true); }} className="px-4 py-2 text-gray-700 rounded-full hover:text-red-500 transition">Login</button>
+                <button onClick={() => { setAuthMode('signup'); setShowAuthModal(true); }} className="px-6 py-2 rounded-full bg-gradient-to-r from-red-500 to-red-600 text-white font-medium">Start Selling</button>
               </div>
             ) : (
               <div className="hidden md:flex items-center space-x-4">
-                <button onClick={() => navigate("/add-product")} className="flex items-center space-x-2 bg-green-600 px-4 py-2 rounded-full text-white font-medium">
+                <button onClick={() => navigate("/add-product")} className="flex items-center space-x-2 bg-blue-900 px-4 py-2 rounded-full text-white font-medium">
                   <Plus className="w-4 h-4" /> Add Product
                 </button>
                 <div className="relative" ref={userMenuRef}>
@@ -247,7 +245,7 @@ const Navbar = () => {
             >
               {/* Modal Header */}
               <div className="text-center mb-6">
-                <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-gradient-to-r from-red-500 to-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Package className="w-8 h-8 text-white" />
                 </div>
                 <h2 className="text-2xl font-bold text-gray-900 mb-2">
@@ -263,7 +261,7 @@ const Navbar = () => {
                 <div className="space-y-4">
                   <input type="email" value={loginData.email} onChange={e => setLoginData({ ...loginData, email: e.target.value })} placeholder="Email" className="w-full px-4 py-3 border rounded-xl" />
                   <input type="password" value={loginData.password} onChange={e => setLoginData({ ...loginData, password: e.target.value })} placeholder="Password" className="w-full px-4 py-3 border rounded-xl" />
-                  <button onClick={handleAuth} disabled={!loginData.email || !loginData.password} className="w-full bg-orange-500 text-white py-3 rounded-xl">Sign In</button>
+                  <button onClick={handleAuth} disabled={!loginData.email || !loginData.password} className="w-full bg-red-500 text-white py-3 rounded-xl">Sign In</button>
                 </div>
               )}
 
@@ -271,7 +269,7 @@ const Navbar = () => {
               {authMode === 'signup' && signupStep === 1 && (
                 <div className="space-y-4">
                   <input type="email" value={signupEmail} onChange={e => setSignupEmail(e.target.value)} placeholder="Email" className="w-full px-4 py-3 border rounded-xl" />
-                  <button onClick={handleSendOtp} disabled={!signupEmail} className="w-full bg-orange-500 text-white py-3 rounded-xl">Get Verification Code</button>
+                  <button onClick={handleSendOtp} disabled={!signupEmail || loding} className={`w-full text-white py-3 rounded-xl ${loding?'bg-gray-500 cursor-not-allowed':'bg-red-500'}`}>{loding? "sending..":"Get Verification Code"}</button>
                 </div>
               )}
 
@@ -281,9 +279,9 @@ const Navbar = () => {
                   <input type="text" value={otp} onChange={e => setOtp(e.target.value)} placeholder="Enter 6-digit OTP" maxLength={6} className="w-full px-4 py-3 border rounded-xl text-center text-lg tracking-widest" />
                   <div className="flex space-x-3">
                     <button onClick={() => setSignupStep(1)} className="flex-1 py-3 border rounded-xl">Back</button>
-                    <button onClick={handleVerifyOtp} className="flex-1 py-3 bg-orange-500 text-white rounded-xl">Verify OTP</button>
+                    <button onClick={handleVerifyOtp} className="flex-1 py-3 bg-red-500 text-white rounded-xl">Verify OTP</button>
                   </div>
-                  <button onClick={handleSendOtp} className="w-full py-2 text-sm text-orange-500 hover:underline mt-2">Resend Code</button>
+                  <button onClick={handleSendOtp} className="w-full py-2 text-sm text-red-500 hover:underline mt-2">Resend Code</button>
                 </div>
               )}
 
@@ -295,7 +293,7 @@ const Navbar = () => {
                   <input type="text" value={signupFormData.phone} onChange={e => setSignupFormData({ ...signupFormData, phone: e.target.value })} placeholder="Phone" className="w-full px-4 py-3 border rounded-xl" />
                   <input type="password" value={signupFormData.password} onChange={e => setSignupFormData({ ...signupFormData, password: e.target.value })} placeholder="Password" className="w-full px-4 py-3 border rounded-xl" />
                   <input type="password" value={signupFormData.confirmPassword} onChange={e => setSignupFormData({ ...signupFormData, confirmPassword: e.target.value })} placeholder="Confirm Password" className="w-full px-4 py-3 border rounded-xl" />
-                  <button onClick={handleSignup} className="w-full bg-orange-500 text-white py-3 rounded-xl">Complete Signup</button>
+                  <button onClick={handleSignup} className="w-full bg-red-500 text-white py-3 rounded-xl">Complete Signup</button>
                 </div>
               )}
             </motion.div>

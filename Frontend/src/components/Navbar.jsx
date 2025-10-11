@@ -43,7 +43,7 @@ const ProfessionalNavbar = () => {
   })
   const [showUserMenu, setShowUserMenu] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  
+
   const [notificationCount, setNotificationCount] = useState(2)
   const [isScrolled, setIsScrolled] = useState(false)
 
@@ -73,45 +73,47 @@ const ProfessionalNavbar = () => {
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
-   // Save token and user to localStorage when they change
-  
+  // Save token and user to localStorage when they change
+
   const handleAuth = () => {
     // Handle login
     if (authMode === 'login') {
       // Simulate authentication
       axios.post(`${url}/api/auth/login`, loginData)
         .then(res => {
-          if (res.status === 200){
+          if (res.status === 200) {
             setUser(res.data.user)
             setToken(res.data.token)
-            localStorage.setItem("token",res.data.token)
+            localStorage.setItem("token", res.data.token)
             localStorage.setItem("user", JSON.stringify(res.data.user))
             navigate("/shop")
-          setShowAuthModal(false)
-          setAuthMode('login')
+            setShowAuthModal(false)
+            setAuthMode('login')
           }
-          
-          
+
+
         }).catch((err) => {
           console.log(err)
-          if(err.response.status === 401)
+          if (err.response.status === 401)
             showError(err.response.data.error)
-          if(err.response.status === 400){
+          if (err.response.status === 400) {
             showError(err.response.data.error)
           }
         })
 
     }
   }
-
+  const [lodding, setLodding] = useState(false);
   // Step 1: Send OTP
   const handleSendOtp = () => {
     if (!signupEmail) return alert("Please enter email");
     // call backend API here to send OTP
+    setLodding(true)
     axios.post(`${url}/api/auth/send-otp`, { email: signupEmail })
       .then(res => {
         if (res.status === 200) {
           setSignupStep(2);
+          setLodding(false)
         }
       })
       .catch(err => console.log(err))
@@ -181,19 +183,39 @@ const ProfessionalNavbar = () => {
         }
       });
   };
+  const [disabled, setDisabled] = useState(false);
+  const [timer, setTimer] = useState(0);
+
+  const handleClick = () => {
+    handleSendOtp(); // Call your OTP function
+    setDisabled(true);
+    setTimer(60); // 60 seconds countdown
+  };
+
+  // Countdown logic
+  useEffect(() => {
+    if (timer > 0) {
+      const interval = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+      return () => clearInterval(interval);
+    } else if (timer === 0) {
+      setDisabled(false);
+    }
+  }, [timer]);
 
   const handleLogout = () => {
     // setIsLoggedIn(false)
-     navigate("/")
-     setToken("");
+    navigate("/")
+    setToken("");
     setUser(null);
 
-  // Clear localStorage
-  localStorage.removeItem("token");
-  localStorage.removeItem("user");
+    // Clear localStorage
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
 
-  // Close menu
-  setShowUserMenu(false);
+    // Close menu
+    setShowUserMenu(false);
     // Reset signup form when logging out
     setSignupStep(1)
     setSignupEmail("")
@@ -221,7 +243,7 @@ const ProfessionalNavbar = () => {
     { icon: Settings, label: 'Profile', action: () => navigate("/profile") },
     { icon: LogOut, label: 'Logout', action: handleLogout }
   ]
-  const [showPassword ,setShowPassword] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
   return (
     <>
 
@@ -313,18 +335,18 @@ const ProfessionalNavbar = () => {
                   transition={{ delay: 0.5, duration: 0.4 }}
                   className="hidden md:flex items-center space-x-4"
                 >
-                 
-                  
+
+
 
                   {/* Cart */}
                   <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
-                    onClick={()=>navigate('/cart')}
+                    onClick={() => navigate('/cart')}
                     className="relative p-2 text-gray-600 hover:text-purple-600 cursor-pointer transition-colors duration-200"
                   >
                     <ShoppingCart className="w-5 h-5 text-purple-600" />
-                    
+
                   </motion.button>
 
                   {/* User Menu */}
@@ -521,21 +543,21 @@ const ProfessionalNavbar = () => {
 
                   <div className="relative">
                     <motion.input
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 }}
-                    type={showPassword?"text":"password"}
-                    onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
-                    placeholder="Password"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-200"
-                    required
-                  />
-                  <span className="absolute top-4 right-3" onClick={()=> setShowPassword(!showPassword)}>
-                    {showPassword?
-                    <Eye className="w-5 h-5 text-gray-500 cursor-pointer" />:
-                    <EyeOff className="w-5 h-5 text-gray-500 cursor-pointer" />
-                    }
-                  </span>
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.1 }}
+                      type={showPassword ? "text" : "password"}
+                      onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
+                      placeholder="Password"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-200"
+                      required
+                    />
+                    <span className="absolute top-4 right-3" onClick={() => setShowPassword(!showPassword)}>
+                      {showPassword ?
+                        <Eye className="w-5 h-5 text-gray-500 cursor-pointer" /> :
+                        <EyeOff className="w-5 h-5 text-gray-500 cursor-pointer" />
+                      }
+                    </span>
                   </div>
 
                   <motion.button
@@ -573,10 +595,16 @@ const ProfessionalNavbar = () => {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={handleSendOtp}
-                    className="w-full bg-purple-600 text-white py-3 rounded-xl font-semibold shadow-md hover:bg-purple-700 transition-all duration-200"
+                    className={`w-full py-3 rounded-xl font-semibold shadow-md transition-all duration-200 
+    ${lodding
+                        ? "bg-purple-200 text-gray-400 cursor-not-allowed"
+                        : "bg-purple-600 text-white hover:bg-purple-700"
+                      }`}
+                    disabled={lodding}
                   >
-                    Get Verification Code
+                    {lodding ? "Sending..." : "Get Verification Code"}
                   </motion.button>
+
                 </div>
               )}
 
@@ -615,8 +643,14 @@ const ProfessionalNavbar = () => {
                   </div>
 
                   <div className="text-center">
-                    <button className="text-sm text-purple-600 hover:text-purple-600 transition-colors duration-200">
-                      Didn't receive the code? Resend
+                    <button onClick={handleClick} disabled={disabled}  className={`text-sm transition-colors  duration-200 ${
+          disabled
+            ? "text-gray-400 cursor-not-allowed"
+            : "text-purple-600 cursor-pointer hover:text-purple-700"
+        }`}>
+                      {disabled
+          ? `Resend available in ${timer}s`
+          : "Didn't receive the code? Resend"}
                     </button>
                   </div>
                 </div>

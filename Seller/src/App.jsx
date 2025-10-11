@@ -9,6 +9,7 @@ import { StoreContext } from './ContextApi';
 import Products from './pages/Products';
 import AddProduct from './pages/AddProduct';
 import Orders from './pages/Orders';
+import ProfilePage from './pages/Profile';
 
 function App() {
   // ProtectedRoute using context
@@ -31,6 +32,7 @@ function App() {
           <Route path='/products' element={<Products/>}/>
           <Route path='/add-product' element={<AddProduct/>} />
           <Route path='/orders' element={<Orders/>} />
+          <Route path='/profile' element={<ProfilePage/>}/>
         </Route>
       </Routes>
       <Footer />

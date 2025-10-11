@@ -157,7 +157,7 @@ const handleSubmit = async (e) => {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-orange-100 py-12 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-red-50 to-red-100 py-8 px-4">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
@@ -173,7 +173,7 @@ const handleSubmit = async (e) => {
               {/* Product Name */}
               <div>
                 <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
-                  <Package className="w-4 h-4 mr-2 text-orange-500" />
+                  <Package className="w-4 h-4 mr-2 text-red-500" />
                   Product Name
                 </label>
                 <input
@@ -184,7 +184,7 @@ const handleSubmit = async (e) => {
                   className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition-colors ${
                     errors.name 
                       ? 'border-red-300 focus:border-red-500' 
-                      : 'border-gray-200 focus:border-orange-500'
+                      : 'border-gray-200 focus:border-red-500'
                   }`}
                   placeholder="Enter product name"
                 />
@@ -199,7 +199,7 @@ const handleSubmit = async (e) => {
               {/* Price */}
               <div>
                 <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
-                  <DollarSign className="w-4 h-4 mr-2 text-orange-500" />
+                  <DollarSign className="w-4 h-4 mr-2 text-red-500" />
                   Price
                 </label>
                 <input
@@ -212,7 +212,7 @@ const handleSubmit = async (e) => {
                   className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition-colors ${
                     errors.price 
                       ? 'border-red-300 focus:border-red-500' 
-                      : 'border-gray-200 focus:border-orange-500'
+                      : 'border-gray-200 focus:border-red-500'
                   }`}
                   placeholder="0.00"
                 />
@@ -227,7 +227,7 @@ const handleSubmit = async (e) => {
               {/* Category */}
               <div>
                 <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
-                  <Tag className="w-4 h-4 mr-2 text-orange-500" />
+                  <Tag className="w-4 h-4 mr-2 text-red-500" />
                   Category
                 </label>
                 <select
@@ -237,7 +237,7 @@ const handleSubmit = async (e) => {
                   className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition-colors ${
                     errors.category 
                       ? 'border-red-300 focus:border-red-500' 
-                      : 'border-gray-200 focus:border-orange-500'
+                      : 'border-gray-200 focus:border-red-500'
                   }`}
                 >
                   <option value="">Select a category</option>
@@ -259,7 +259,7 @@ const handleSubmit = async (e) => {
               {/* Stock */}
               <div>
                 <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
-                  <Hash className="w-4 h-4 mr-2 text-orange-500" />
+                  <Hash className="w-4 h-4 mr-2 text-red-500" />
                   Stock Quantity
                 </label>
                 <input
@@ -271,7 +271,7 @@ const handleSubmit = async (e) => {
                   className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition-colors ${
                     errors.stock 
                       ? 'border-red-300 focus:border-red-500' 
-                      : 'border-gray-200 focus:border-orange-500'
+                      : 'border-gray-200 focus:border-red-500'
                   }`}
                   placeholder="0"
                 />
@@ -289,7 +289,7 @@ const handleSubmit = async (e) => {
               {/* Description */}
               <div>
                 <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
-                  <FileText className="w-4 h-4 mr-2 text-orange-500" />
+                  <FileText className="w-4 h-4 mr-2 text-red-500" />
                   Description
                 </label>
                 <textarea
@@ -300,7 +300,7 @@ const handleSubmit = async (e) => {
                   className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition-colors resize-none ${
                     errors.description 
                       ? 'border-red-300 focus:border-red-500' 
-                      : 'border-gray-200 focus:border-orange-500'
+                      : 'border-gray-200 focus:border-red-500'
                   }`}
                   placeholder="Describe your product..."
                 />
@@ -315,12 +315,12 @@ const handleSubmit = async (e) => {
               {/* Image Upload */}
               <div>
                 <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
-                  <Upload className="w-4 h-4 mr-2 text-orange-500" />
+                  <Upload className="w-4 h-4 mr-2 text-red-500" />
                   Product Images (Max 5)
                 </label>
                 
                 {/* Upload Area */}
-                <div className="border-2 border-dashed border-orange-300 rounded-xl p-6 text-center hover:border-orange-400 transition-colors">
+                <div className="border-2 border-dashed border-red-300 rounded-xl p-6 text-center hover:border-red-400 transition-colors">
                   <input
                     type="file"
                     multiple
@@ -334,8 +334,8 @@ const handleSubmit = async (e) => {
                     htmlFor="image-upload"
                     className={`cursor-pointer ${images.length >= 5 ? 'cursor-not-allowed opacity-50' : ''}`}
                   >
-                    <Plus className="w-12 h-12 mx-auto mb-3 text-orange-400" />
-                    <p className="text-orange-600 font-medium">
+                    <Plus className="w-12 h-12 mx-auto mb-3 text-red-400" />
+                    <p className="text-red-600 font-medium">
                       {images.length >= 5 ? 'Maximum images reached' : 'Click to upload images'}
                     </p>
                     <p className="text-sm text-gray-500 mt-1">
@@ -359,7 +359,7 @@ const handleSubmit = async (e) => {
                         <img
                           src={preview.url}
                           alt={`Preview ${index + 1}`}
-                          className="w-full h-32 object-cover rounded-lg border-2 border-orange-200"
+                          className="w-full h-32 object-cover rounded-lg border-2 border-red-200"
                         />
                         <button
                           type="button"
@@ -382,7 +382,7 @@ const handleSubmit = async (e) => {
               type="button"
               onClick={handleSubmit}
               disabled={isSubmitting}
-              className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-4 px-8 rounded-xl font-semibold text-lg hover:from-orange-600 hover:to-orange-700 transform hover:scale-[1.02] transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              className="w-full bg-gradient-to-r from-red-500 to-red-600 text-white py-4 px-8 rounded-xl font-semibold text-lg hover:from-red-600 hover:to-red-700 transform hover:scale-[1.02] transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             >
               {isSubmitting ? (
                 <span className="flex items-center justify-center">
